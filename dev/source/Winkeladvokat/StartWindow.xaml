@@ -1,0 +1,23 @@
+﻿<Window x:Class="Winkeladvokat.StartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Winkeladvokat" MinHeight="500" MinWidth="500" Height="500" Width="500">
+        <UserControl>
+            <StackPanel>
+                <StackPanel Background="#FFECECEC" Margin="0,0,0,30">
+                    <TextBlock FontSize="48" HorizontalAlignment="Center" TextWrapping="Wrap">Wilkommen zu Winkeladvokat</TextBlock>
+                </StackPanel>
+                <StackPanel x:Name="NrOfPlayerStackPanel" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                    <Label FontSize="16">Anzahl Spieler:</Label>
+                <ComboBox Width="80" x:Name="NumberOfPlayers" HorizontalContentAlignment="Right" FontSize="16">
+                    <ComboBoxItem IsSelected="True" Content="2"/>
+                    <ComboBoxItem Content="3"/>
+                    <ComboBoxItem Content="4"/>
+                </ComboBox>
+            </StackPanel>
+                <ContentControl HorizontalAlignment="Center" Margin="10" Width="{Binding ElementName=NrOfPlayerStackPanel, Path=ActualWidth}">
+                    <Button Click="ButtonStartGameClick" FontSize="16">Spiel starten!</Button>
+                </ContentControl>
+            </StackPanel>
+        </UserControl>
+</Window>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.Math</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.Math.FinancialHelper">
+            <summary>
+            Provides functionality for financial rounding.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Math.FinancialHelper.FinancialRound5(System.Decimal)">
+            <summary>
+            Returns the number rounded to 0.05 for showing to 
+            the user and printing.
+            </summary>
+            <param name="unrounded">Decimal value to be rounded.</param>
+            <returns>The value rounded to 5 Rappen.</returns>
+        </member>
+        <member name="M:bbv.Common.Math.FinancialHelper.FinancialRound(System.Decimal,System.Int32)">
+            <summary>
+            Returns the number with the specified precision nearest the 
+            specified value also known as "bankers rounding".
+            </summary>
+            <remarks>
+            For detailed information see <see cref="M:System.Math.Round(System.Decimal,System.Int32,System.MidpointRounding)"/> function.
+            </remarks>
+            <param name="unrounded">decimal value to be rounded.</param>
+            <param name="digits">The precision to round.</param>
+            <returns>The number nearest value with precision equal to digits.</returns>
+        </member>
+        <member name="M:bbv.Common.Math.FinancialHelper.FinancialRound1(System.Decimal)">
+            <summary>
+            Returns the number with the precision of 2 digits 
+            nearest the specified value also known as "bankers rounding".
+            </summary>
+            <remarks>
+            For detailed information see <see cref="M:System.Math.Round(System.Decimal,System.Int32,System.MidpointRounding)"/> function.
+            </remarks>
+            <param name="unrounded">decimal value to be rounded.</param>
+            <returns>The number nearest value with precision of 2 digits.</returns>
+        </member>
+        <member name="M:bbv.Common.Math.FinancialHelper.Roundup(System.Decimal,System.Int32)">
+            <summary>
+            Rounds the value always up. If round to 2 digits a value 1.791 is rounded to 1.80 but
+            just 1.790 is rounded to 1.79
+            </summary>
+            <param name="unrounded">the unrounded value</param>
+            <param name="digits">the number of digits the value has to have after rounding</param>
+            <returns>the rounded value</returns>
+        </member>
+    </members>
+</doc>

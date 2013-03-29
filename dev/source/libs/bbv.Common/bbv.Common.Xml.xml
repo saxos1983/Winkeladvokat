@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.Xml</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.Xml.XmlHelper">
+            <summary>
+            Reading an attribute or an element from an XmlDocument consists of 
+            several steps. This class encapsulates these steps in static methods.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Xml.XmlHelper.FindAttribute(System.Xml.XmlDocument,System.String,System.String)">
+            <summary>
+            Gets the attribute node in the XmlDocument instance 
+            with the given element and attribute name.
+            </summary>
+            <param name="xmlDoc">
+            XmlDocument instance to be searched.
+            </param>
+            <param name="element">
+            Example XML Invoice request: 
+            invoice:invoice/invoice:tiers_garant/invoice:provider
+            </param>
+            <param name="attribute">
+            Example XML Invoice request: ean_party
+            </param>
+            <returns>
+            The attribute node if the attribute has been found. 
+            Otherwise null.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Xml.XmlHelper.FindAttributeOfAnyElement(System.Xml.XmlDocument,System.String[],System.String)">
+            <summary>
+            Same as FindAttribute but this method takes n 
+            parent elements. It checks each element for the 
+            attribute and returns the first match.
+            </summary>
+            <param name="xmlDoc">
+            XmlDocument instance to be searched.
+            </param>
+            <param name="elements">
+            An array of elements.
+            </param>
+            <param name="attribute">
+            See above.
+            </param>
+            <returns>
+            The attribute node if the the attribute has been found. 
+            Otherwise null.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Xml.XmlHelper.FindRootAttribute(System.Xml.XmlDocument,System.String)">
+            <summary>
+            The attributes of the root element have to be 
+            accessed differently to the other elements.
+            </summary>
+            <param name="xmlDoc">
+            XmlDocument instance to be searched.
+            </param>
+            <param name="attribute">
+             XML Invoice request: role
+            </param>
+            <returns>
+            The attribute node if the the attribute has been found. 
+            Otherwise null.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Xml.XmlHelper.FindElement(System.Xml.XmlDocument,System.String)">
+            <summary>
+            Gets the element node in the XmlDocument instance 
+            with the given element name.
+            </summary>
+            <param name="xmlDoc">
+            XmlDocument instance to be searched.
+            </param>
+            <param name="element">
+            Example XML Invoice request: 
+            invoice:invoice/invoice:tiers_garant/invoice:provider
+            </param>
+            <returns>
+            The element node if the the element has been found. 
+            Otherwise null.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Xml.XmlHelper.GetNamespaces(System.Xml.XmlDocument)">
+            <summary>
+            If an Xml has more than one namespace, we need a 
+            namespace manager. This method reads the namespaces from 
+            the xml with XPath to fill the namespace manager.
+            </summary>
+            <param name="xmlDoc">
+            XmlDocument that has more than one namespace.
+            </param>
+            <returns>
+            A filled namespace manager.
+            </returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,1417 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.Data.DataAdapter</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.Data.BbvDataAdapter">
+            <summary>
+                BbvDataAdapter implements the <see cref="T:System.Data.IDataAdapter"/> interface 
+                and adds some important things to handle daily database business 
+                easier for the developer.
+            </summary>
+            <remarks>
+              <code>
+                Things that will be offered above the <see cref="T:System.Data.IDataAdapter"/> 
+                interface and the standard ADO.NET <see cref="T:System.Data.Common.DataAdapter"/>:
+                - Provides Update methods for DataSet, DataTable and DataRow.
+                - Support for choosable update actions against the database 
+                  (UPDATE, INSERT, DELETE).
+                - Dynamic generation for Update-, Insert- and DeleteCommands.
+                - Support for default CommandTimeout.
+                - Support for nested Transactions.
+                - Internal handling and storing of Connections, Transactions etc.
+                - Support for automatically generated IDENTITY values.
+                - Full Multi Threading support.
+                - Provides Properties for Database, Server, ServerVersion, User
+                  read from the connection string or the database itself.
+                - Supports SqlConnection as well as any OleDbConnections. Automatically
+                  chooses the right type from the connection string.
+              </code>
+            </remarks>
+        </member>
+        <member name="F:bbv.Common.Data.BbvDataAdapter.DefaultCommandTimeoutSeconds">
+            <summary>
+            This is the default command timeout in seconds.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.BbvDataAdapter.KeyServer">
+            <summary>
+            The key in the connection string to identify the database server's name.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.BbvDataAdapter.KeyUser">
+            <summary>
+                The key in the connection string to identify the user's name.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.BbvDataAdapter.KeyDatabase">
+            <summary>
+                The key in the connection string to identify the database name.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.BbvDataAdapter.KeyDatabaseAlternate">
+            <summary>
+                The alternate key in the connection string to identify the database name.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.#ctor(System.String,System.Int32)">
+            <summary>
+            Creates an instance of <see cref="T:bbv.Common.Data.BbvDataAdapter"/>.
+            </summary>
+            <param name="connectionString">The connection string used to connect to the database.</param>
+            <param name="commandTimeoutSeconds">The default command timeout in seconds. The timeout 
+                can be overwritten in every command.</param>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.#ctor(System.String)">
+            <summary>
+            Creates an instance of <see cref="T:bbv.Common.Data.BbvDataAdapter"/>.
+            Overloaded constructor without command timeout. The default timeout of 30 seconds will be set.
+            </summary>
+            <param name="connectionString">The connection string used to connect to the database.</param>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Connect">
+            <summary>
+            Private method which creates and opens a new database connection. 
+            The reference to the SqlConnection will be stored in the 
+            internal connection list.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.GetServerVersion">
+            <summary>
+            Gets the server version of a SQL Server. This will be detected through 
+            <c>SELECT SERVERPROPERTY('productversion')</c>.
+            </summary>
+            <returns>Returns a string containing the SQL Database Server Version.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Disconnect">
+            <summary>
+            Private method which closes the database connection. If a 
+            transaction was started, this method returns without closing
+            the connection, because the connection will be closed in
+            the method EndTransaction.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Database connection was not open.</exception>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.BeginTransaction(System.Data.IsolationLevel)">
+            <summary>
+            Begins a transaction on the Database level.
+            </summary>
+            <remarks>
+            You must explicity commit or roll back the transaction using 
+            the EndTransaction method with Commit or Rollback parameter.
+            The current implementation supports only IsolationLevel 
+            ReadCommitted. 
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">
+            The DatabaseAccess was not correctly started up, connection already open 
+            or transaction already started.</exception>
+            <exception cref="T:bbv.Common.Data.DatabaseException">A database level exception occured.</exception>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.BeginTransaction">
+            <summary>
+            Overloaded method for BeginTransaction which uses the 
+            IsolationLevel ReadCommitted.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Commit">
+            <summary>
+            Commits a opened Transaction against the database.
+            </summary>
+            <remarks>It is virtual for MockDatabase.</remarks>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Rollback(System.Exception,System.String)">
+            <summary>
+            Rollbacks a Transaction against the database with log support.
+            </summary>
+            <remarks>It is virtual for MockDatabase.</remarks>
+            <param name="e">The Exception you want to log. If you won't any log, give null here.</param>
+            <param name="callerModule">The caller module to log.</param>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Rollback">
+            <summary>
+            Rollbacks a Transaction against the database without logging.
+            </summary>
+            <remarks>It is virtual for MockDatabase.</remarks>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.EndTransaction(bbv.Common.Data.BbvDataAdapter.DbEndTransaction,System.Exception,System.String)">
+            <summary>
+            Ends a started transaction with commit or rollback.
+            </summary>
+            <param name="endTransaction">Enum from DbConstants.DbEndTransaction 
+            to say if the transaction should be commited or rollbacked.</param>
+            <param name="exc">The exception to log. Can be null which will mean no logging.</param>
+            <param name="callerModule">The module to log if an <see cref="T:System.Exception"/> was provided.</param>
+            <exception cref="T:System.InvalidOperationException">The DatabaseAccess was not correctly started up 
+                or the transaction was not started.</exception>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.OnCommitted(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:bbv.Common.Data.BbvDataAdapter.Committed"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> to raise.</param>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.OnRollbacked(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:bbv.Common.Data.BbvDataAdapter.Rollbacked"/> event.
+            </summary>
+            <param name="e">The <see cref="T:System.EventArgs"/> to raise.</param>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.FormatDate(System.DateTime)">
+            <summary>
+            Formats the given DateTime to a string, which can be used to
+            insert or query date values against the database.
+            </summary>
+            <remarks>
+            Date and Time parts will be formatted!
+            </remarks>
+            <param name="dateTime">The DateTime to convert to a string.</param>
+            <returns>String with the formatted date and time value.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.FilterSameDay(System.String,System.DateTime)">
+            <summary>
+                Returns a filter criteria for a date comparing for one day 
+                without looking for the time. Database server always stores 
+                time together with the date.
+            </summary>
+            <param name="dateColumnName">dateColumnName contains the column name 
+                containing the date in the database you want compare to.</param>
+            <param name="dateTime">dateTime contains the date you wish to compare 
+                against the database column.</param>
+            <returns>string that represents the filter criteria for same day.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.FilterLaterOrSameDay(System.String,System.DateTime)">
+            <summary>
+                Returns a filter string for later or same day. If dateTime is later or at the same day as dateColumnName then it returns true.
+                Database server always stores time together with the date.
+            </summary>
+            <param name="dateColumnName">dateColumnName contains the column name 
+                containing the date in the database you want compare to.</param>
+            <param name="dateTime">dateTime contains the date you wish to compare 
+                against the database column.</param>
+            <returns>string that represents the filter criteria for same day.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.FilterEarlierOrSameDay(System.String,System.DateTime)">
+            <summary>
+                Returns a filter string for earlier or same day. If dateTime 
+                is earlier or at the same day as dateColumnName then it returns true.
+                Database server always stores time together with the date.
+            </summary>
+            <param name="dateColumnName">dateColumnName contains the column name 
+                containing the date in the database you want compare to.</param>
+            <param name="dateTime">dateTime contains the date you wish to compare 
+                against the database column.</param>
+            <returns>string that represents the filter criteria for same day.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.FilterLater(System.String,System.DateTime)">
+            <summary>
+                Returns a filter string for later. If dateTime is later as dateColumnName then it returns true.
+                Database server always stores time together with the date.
+            </summary>
+            <param name="dateColumnName">dateColumnName contains the column name 
+                containing the date in the database you want compare to.</param>
+            <param name="dateTime">dateTime contains the date you wish to compare 
+                against the database column.</param>
+            <returns>string that represents the filter criteria for same day.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.FilterEarlier(System.String,System.DateTime)">
+            <summary>
+                Returns a filter string for earlier. If dateTime is earlier as dateColumnName then it returns true.
+                Database server always stores time together with the date.
+            </summary>
+            <param name="dateColumnName">dateColumnName contains the column name 
+                containing the date in the database you want compare to.</param>
+            <param name="dateTime">dateTime contains the date you wish to compare 
+                against the database column.</param>
+            <returns>string that represents the filter criteria for same day.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.FilterDateRange(System.String,System.DateTime,System.DateTime)">
+            <summary>
+                Returns a filter string for date range. It creates a BETWEEN filter that
+                handles a date rangre from fromDate-00:00:00 to toDate-23:59:59
+            </summary>
+            <param name="dateColumnName">dateColumnName contains the column name 
+                containing the date in the database you want compare to.</param>
+            <param name="fromDate">Range date start (time 00:00:00)</param>
+            <param name="toDate">Range date end (time 23:59:59)</param>
+            <returns></returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.GetCaller">
+            <summary>
+                Gets the caller function of the calling method.
+            </summary>
+            <returns>Returns a string containing the caller from the StackTrace.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.TestConnection">
+            <summary>
+                Method will test the connection to the database by selecting
+                the count from the table "Benutzer".
+            </summary>
+            <remarks>
+                If a call to Connect() was succsessful, this method will return
+                always true. The Properties "Database" and "ServerVersion" will
+                only be set after a call to this method.
+            </remarks>
+            <returns>
+                Returns true if the connection was successfull, false otherwise.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+                The Component is not the state running.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataSet)">
+            <summary>
+                Adds or refreshes rows in the <see cref="T:System.Data.DataSet"/> to match 
+                those in the data source using the DataSet name, and creates 
+                a <see cref="T:System.Data.DataTable"/> named "Table".
+            </summary>
+            <param name="dataSet">A <see cref="T:System.Data.DataSet"/> to fill with 
+                records and, if necessary, schema.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataSet,System.String)">
+            <summary>
+                Adds or refreshes rows in the <see cref="T:System.Data.DataSet"/> to match
+                those in the data source using the DataSet and <see cref="T:System.Data.DataTable"/> names.
+            </summary>
+            <param name="dataSet">A <see cref="T:System.Data.DataSet"/> to fill with 
+                records and, if necessary, schema.</param>
+            <param name="tableToFill">The name of the table to fill.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataSet,System.String,System.String,System.Data.IDataParameter[])">
+            <summary>
+                OVERLOADED:
+                Adds or refreshes rows in the <see cref="T:System.Data.DataSet"/> to match
+                those in the data source using the DataSet and <see cref="T:System.Data.DataTable"/> names.
+            </summary>
+            <param name="dataSet">A <see cref="T:System.Data.DataSet"/> to fill with 
+                records and, if necessary, schema.</param>
+            <param name="tableToFill">The name of the table to fill.</param>
+            <param name="sqlQuery">The query to use for that fill operation.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataSet,System.String,System.String,System.Int32,System.Data.IDataParameter[])">
+            <summary>
+                OVERLOADED:
+                Adds or refreshes rows in the <see cref="T:System.Data.DataSet"/> to match
+                those in the data source using the DataSet and <see cref="T:System.Data.DataTable"/> names.
+            </summary>
+            <param name="dataSet">A <see cref="T:System.Data.DataSet"/> to fill with records and, if necessary, schema.</param>
+            <param name="tableToFill">The name of the table to fill.</param>
+            <param name="sqlQuery">The query to use for that fill operation.</param>
+            <param name="timeout">The timeout to use for executing that fill operation in seconds.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataSet,System.String,System.Int32,System.Data.CommandType,System.Data.IDataParameter[])">
+            <summary>
+                OVERLOADED:
+                Adds or refreshes rows in the <see cref="T:System.Data.DataSet"/> to match
+                those in the data source using the DataSet and <see cref="T:System.Data.DataTable"/> names.
+            </summary>
+            <param name="dataSet">A <see cref="T:System.Data.DataSet"/> to fill with records and, if necessary, schema.</param>
+            <param name="sqlQuery">The query to use for that fill operation.</param>
+            <param name="timeout">The timeout to use for executing that fill operation in seconds.</param>
+            <param name="cmdType">The <see cref="T:System.Data.CommandType"/> to execute e.g. text or stored procedure.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataSet,System.String,System.Data.CommandType,System.Data.IDataParameter[])">
+            <summary>
+                OVERLOADED:
+                Adds or refreshes rows in the <see cref="T:System.Data.DataSet"/> to match
+                those in the data source using the DataSet and <see cref="T:System.Data.DataTable"/> names.
+            </summary>
+            <param name="dataSet">A <see cref="T:System.Data.DataSet"/> to fill with records and, if necessary, schema.</param>
+            <param name="sqlQuery">The query to use for that fill operation.</param>
+            <param name="cmdType">The <see cref="T:System.Data.CommandType"/> to execute e.g. text or stored procedure.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataSet,System.String,System.String,System.Int32,System.Data.CommandType,System.Data.IDataParameter[])">
+            <summary>
+                OVERLOADED:
+                Adds or refreshes rows in the <see cref="T:System.Data.DataSet"/> to match
+                those in the data source using the DataSet and <see cref="T:System.Data.DataTable"/> names.
+            </summary>
+            <param name="dataSet">A <see cref="T:System.Data.DataSet"/> to fill with records and, if necessary, schema.</param>
+            <param name="tableToFill">The name of the table to fill.</param>
+            <param name="sqlQuery">The query to use for that fill operation.</param>
+            <param name="timeout">The timeout to use for executing that fill operation in seconds.</param>
+            <param name="cmdType">The <see cref="T:System.Data.CommandType"/> to execute e.g. text or stored procedure.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataTable,System.String,System.Data.IDataParameter[])">
+            <summary>
+                OVERLOADED:
+                Adds or refreshes rows in the <see cref="T:System.Data.DataTable"/> to match
+                those in the data source using the <see cref="T:System.Data.DataTable"/> name.
+            </summary>
+            <param name="table">A <see cref="T:System.Data.DataTable"/> to fill with records and, if necessary, schema.</param>
+            <param name="sqlQuery">The query to use for that fill operation.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Fill(System.Data.DataTable,System.String,System.Data.CommandType,System.Data.IDataParameter[])">
+            <summary>
+                OVERLOADED:
+                Adds or refreshes rows in the <see cref="T:System.Data.DataTable"/> to match
+                those in the data source using the <see cref="T:System.Data.DataTable"/> name.
+            </summary>
+            <param name="table">A <see cref="T:System.Data.DataTable"/> to fill with records and, if necessary, schema.</param>
+            <param name="sqlQuery">The query to use for that fill operation.</param>
+            <param name="cmdType">The <see cref="T:System.Data.CommandType"/> to execute e.g. text or stored procedure.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>
+                The number of rows successfully added to or refreshed in 
+                the <see cref="T:System.Data.DataSet"/>. This does not include rows 
+                affected by statements that do not return rows.    
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet)">
+            <summary>
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> used to update the data source.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet,bbv.Common.Data.UpdateActions)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> used to update the data source.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet)"/>. Use 
+                logical operators to include more than one action.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet,System.String[])">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> used to update the data source.</param>
+            <param name="orderedTablesToUpdate">A list of the tables to perform the 
+                actions. The actions will be performed in the order of this string array.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet,System.String[],bbv.Common.Data.UpdateActions)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> used to update the data source.</param>
+            <param name="orderedTablesToUpdate">A list of the tables to perform the 
+                actions. The actions will be performed in the order of this string array.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet)"/>. Use 
+                logical operators to include more than one action.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet,System.String)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> used to update the data source.</param>
+            <param name="tableToUpdate">The name of the table to perform the actions.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet,System.String,bbv.Common.Data.UpdateActions)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> used to update the data source.</param>
+            <param name="tableToUpdate">The name of the table to perform the actions.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet)"/>. Use 
+                logical operators to include more than one action.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataRow[])">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataRows">An array of <see cref="T:System.Data.DataRow"/> used to update the data source.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataRow[],bbv.Common.Data.UpdateActions)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataRows">An array of <see cref="T:System.Data.DataRow"/> used to update the data source.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet)"/>. Use 
+                logical operators to include more than one action.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataTable)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> used to update the data source.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataTable,bbv.Common.Data.UpdateActions)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataTable">The <see cref="T:System.Data.DataTable"/> used to update the data source.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet)"/>. Use 
+                logical operators to include more than one action.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataRow)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataRow">The <see cref="T:System.Data.DataRow"/> used to update the data source.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataRow,bbv.Common.Data.UpdateActions)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataRow">The <see cref="T:System.Data.DataRow"/> used to update the data source.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet)"/>. Use 
+                logical operators to include more than one action.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataRow,bbv.Common.Data.UpdateActions,System.Int32)">
+            <summary>
+                OVERLOADED:
+                Calls the respective INSERT, UPDATE, or DELETE statements for 
+                each inserted, updated, or deleted row in the specified DataSet 
+                from a DataTable named "Table".
+            </summary>
+            <param name="dataRow">A <see cref="T:System.Data.DataRow"/> used to update the data source.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.BbvDataAdapter.Update(System.Data.DataSet)"/>. Use 
+                logical operators to include more than one action.</param>
+            <param name="timeout">The timeout to use for executing that 
+                fill operation in seconds.</param>
+            <returns>
+                The number of rows successfully updated from the <see cref="T:System.Data.DataSet"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.GetFillParameters">
+            <summary>
+                Gets the parameters set by the user when executing an SQL SELECT statement.
+            </summary>
+            <remarks>
+                This method is not implemented by <see cref="T:bbv.Common.Data.BbvDataAdapter"/>.
+            </remarks>
+            <returns>
+                An array of <see cref="T:System.Data.IDataParameter"/> objects that contains the parameters set by the user.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.FillSchema(System.Data.DataSet,System.Data.SchemaType)">
+            <summary>
+                Adds a DataTable named "Table" to the specified DataSet and configures 
+                the schema to match that in the data source based on the specified SchemaType.
+            </summary>
+            <remarks>
+                This method is not implemented by <see cref="T:bbv.Common.Data.BbvDataAdapter"/>.
+            </remarks>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> to be filled with the schema 
+                from the data source.</param>
+            <param name="schemaType">One of the <see cref="T:System.Data.SchemaType"/> values.</param>
+            <returns>
+                An array of <see cref="T:System.Data.DataTable"/> objects that contain schema 
+                information returned from the data source.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.ExecuteSql(System.String,System.Data.IDataParameter[])">
+            <summary>
+                Executes a freely definable SQL statement and returns the number of rows affected.
+            </summary>
+            <param name="sqlQuery">The query string to execute.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>The number of rows affected.</returns>
+            <exception cref="T:System.InvalidOperationException">The DatabaseAccess was not correctly started up.</exception>
+            <exception cref="T:bbv.Common.Data.DatabaseException">A database level error occured.</exception>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.ExecuteSql(System.String,System.Int32,System.Data.IDataParameter[])">
+            <summary>
+                Executes a freely definable SQL statement and returns the number of rows affected.
+            </summary>
+            <param name="sqlQuery">The query string to execute.</param>
+            <param name="timeout">The timeout to use for executing that query in seconds.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>The number of rows affected.</returns>
+            <exception cref="T:System.InvalidOperationException">The DatabaseAccess was not correctly started up.</exception>
+            <exception cref="T:bbv.Common.Data.DatabaseException">A database level error occured.</exception>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.ExecuteSqlWithReturnValue(System.String,System.Data.IDataParameter[])">
+            <summary>
+                Executes a freely definable SQL statement and returns the value from the database.
+            </summary>
+            <param name="sqlQuery">The query string to execute.</param>
+            <returns>The return value from the query. The type will be set by ADO.NET.</returns>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <exception cref="T:System.InvalidOperationException">The DatabaseAccess was not correctly started up.</exception>
+            <exception cref="T:bbv.Common.Data.DatabaseException">A database level error occured.</exception>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.ExecuteSqlWithReturnValue(System.String,System.Int32,System.Data.IDataParameter[])">
+            <summary>
+                Executes a freely definable SQL statement and returns the value from the database.
+            </summary>
+            <param name="sqlQuery">The query string to execute.</param>
+            <param name="timeout">The timeout to use for executing that query in seconds.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>The return value from the query. The type will be set by ADO.NET.</returns>
+            <exception cref="T:System.InvalidOperationException">The DatabaseAccess was not correctly started up.</exception>
+            <exception cref="T:bbv.Common.Data.DatabaseException">A database level error occured.</exception>
+        </member>
+        <member name="M:bbv.Common.Data.BbvDataAdapter.ExecuteReader(System.String,System.Data.IDataParameter[])">
+            <summary>
+                Returns a IDataReader with the given SQL query string.
+            </summary>
+            <param name="sqlQuery">The SQL query string for the Reader.</param>
+            <param name="parameters">The optional <see cref="T:System.Data.IDbDataParameter"/> array 
+                which will be added to the command. Typically you will use a stored 
+                procedure as the <paramref>sqlQuery</paramref> when you add parameters.</param>
+            <returns>Returns the IDataReader.</returns>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.ConfigurationInvalid">
+            <summary>
+            Returns if connectionString
+            was initialized and contains a value.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.StoredConnectionCount">
+            <summary>
+            Returns the number of stored connections in the internal
+            <see cref="T:bbv.Common.Data.SyncConnectionList"/>.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.Connected">
+            <summary>
+            Private property that indicates wheter a wheter a database 
+            connection already opened.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.CurrentThreadId">
+            <summary>
+            Private property returns the id of the current thread.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.CurrentConnectionDataItem">
+            <summary>
+            Private property returns the <see cref="T:bbv.Common.Data.ConnectionDataItem"/>
+            for the current running thread.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.Connection">
+            <summary>
+            Returns the internal stored <see cref="T:System.Data.IDbConnection"/> for
+            the current running thread if already stored. If no connection
+            object created for the current running thread, it will be 
+            created and stored within this property.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.Transaction">
+            <summary>
+            Returns the internal stored <see cref="T:System.Data.IDbTransaction"/> for
+            the current running thread. If no <see cref="T:bbv.Common.Data.ConnectionDataItem"/>
+            exists for the current running thread, the property will return null.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.IsTransactionOpen">
+            <summary>
+            Gets whether an open transaction exists or not.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.Data.BbvDataAdapter.Committed">
+            <summary>
+            Event will be fired on current connection/transaction after the 
+            Commit against the database was called.
+            </summary>
+            <remarks>
+            The event can only be associated within an open Transaction. When
+            the Transaction was closed against the database, all events will
+            be disconnected.
+            </remarks>
+        </member>
+        <member name="E:bbv.Common.Data.BbvDataAdapter.Rollbacked">
+            <summary>
+            Event will be fired on current connection/transaction after the 
+            Rollback against the database was called.
+            </summary>
+            <remarks>
+            The event can only be associated within an open Transaction. When
+            the Transaction was closed against the database, all events will
+            be disconnected.
+            </remarks>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.InternationalDateTimeFormat">
+            <summary>
+            Returns the international Date Time Format for selecting 
+            DateTime values from DataTables.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.ConnectionString">
+            <summary>
+                Gets or sets the connection string used to connect to the database.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.CommandTimeoutSeconds">
+            <summary>
+                Gets or sets the CommandTimeout for all commands executed against the
+                database where no value for the CommandTimeout was submitted. If you
+                don't set the CommandTimeout, it will default to 30 seconds.
+            </summary>
+            <remarks>
+                The CommandTimeout will not be used for the Transaction Timeout. This
+                value will be taken from the connection timeout defined with the 
+                connection string as 'Connect Timeout=value'. (see google groups 
+                for further explanation). This value will default to 15 seconds.
+            </remarks>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.Database">
+            <summary>
+                Returns the Database name of the initial connection. If no 
+                connection has been made an empty string ("") will be returned.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.Server">
+            <summary>
+                Returns the Server name of the initial connection. If no 
+                connection has been made an empty string ("") will be returned.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.ServerVersion">
+            <summary>
+                Returns the Server version of the initial connection. If no 
+                connection has been made an empty string ("") will be returned.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.User">
+            <summary>
+                Returns the User name of the initial connection.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.Connector">
+            <summary>
+            Returns the current active DbConnector
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.TableMappings">
+            <summary>
+                This property is not implemented by <see cref="T:bbv.Common.Data.BbvDataAdapter"/>.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.MissingSchemaAction">
+            <summary>
+                This property is not implemented by <see cref="T:bbv.Common.Data.BbvDataAdapter"/>.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.BbvDataAdapter.MissingMappingAction">
+            <summary>
+                This property is not implemented by <see cref="T:bbv.Common.Data.BbvDataAdapter"/>.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Data.BbvDataAdapter.DbEndTransaction">
+            <summary>
+            Defines the valid values for the EndTransaction method.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.BbvDataAdapter.DbEndTransaction.Commit">
+            <summary>Commits the started transaction. Everything will be stored
+              in the database.</summary>
+        </member>
+        <member name="F:bbv.Common.Data.BbvDataAdapter.DbEndTransaction.Rollback">
+            <summary>Rolls back the started transaction. Nothing will be stored
+              in the database.</summary>
+        </member>
+        <member name="T:bbv.Common.Data.ConnectionDataItem">
+            <summary>
+                Internal class holding connection and transaction information
+                on a thread basis; one item will be created per thread and will
+                be stored in the <see cref="!:BbvDataAdapter.m_SyncConnectionList"/>.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.ConnectionDataItem.#ctor(System.Data.IDbConnection)">
+            <summary>
+                Creates a <see cref="T:bbv.Common.Data.ConnectionDataItem"/> and sets the <see cref="P:bbv.Common.Data.ConnectionDataItem.CreationTime"/> 
+                to the current system date/time and the <see cref="P:bbv.Common.Data.ConnectionDataItem.ThreadId"/> 
+                to the current running thread.
+            </summary>
+            <param name="conn">
+                <see cref="T:System.Data.IDbConnection"/> to store in the <see cref="T:bbv.Common.Data.ConnectionDataItem"/>.
+            </param>
+        </member>
+        <member name="M:bbv.Common.Data.ConnectionDataItem.IncreaseTransactionCount">
+            <summary>
+                Increases the TransactionCount by 1.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.ConnectionDataItem.DecreaseTransactionCount">
+            <summary>
+                Decreases the TransactionCount by 1.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.ConnectionDataItem.CommitTransaction">
+            <summary>
+                Commits the transaction and resets the internal member for the Transaction.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.ConnectionDataItem.RollbackTransaction">
+            <summary>
+                Rolls back the transaction and resets the internal member for the Transaction.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.ConnectionDataItem.Connection">
+            <summary>
+                Returns the <see cref="T:System.Data.IDbConnection"/> for that 
+                <see cref="T:bbv.Common.Data.ConnectionDataItem"/>.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.ConnectionDataItem.Transaction">
+            <summary>
+                Returns the <see cref="T:System.Data.IDbTransaction"/> for that 
+                <see cref="T:bbv.Common.Data.ConnectionDataItem"/>.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.ConnectionDataItem.CreationTime">
+            <summary>
+                Returns the <see cref="T:System.DateTime"/> of creation for that 
+                <see cref="T:bbv.Common.Data.ConnectionDataItem"/>.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.ConnectionDataItem.ThreadId">
+            <summary>
+                Returns the <see cref="P:bbv.Common.Data.ConnectionDataItem.ThreadId"/> for that 
+                <see cref="T:bbv.Common.Data.ConnectionDataItem"/>.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.ConnectionDataItem.TransactionCount">
+            <summary>
+                Returns the current count of open, nested transactions for that 
+                <see cref="T:bbv.Common.Data.ConnectionDataItem"/>. If the count is 0, no 
+                transactions are currently open on that connection.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.ConnectionDataItem.IsConnectionOpen">
+            <summary>
+                Returns whether the current connection is open or not. 
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.ConnectionDataItem.IsTransactionOpen">
+            <summary>
+                Returns whether the current connection is within a transaction
+                or not. 
+            </summary>
+            <remarks>
+                You cannot determine if we are in a nested transaction or not.
+                Use <see cref="P:bbv.Common.Data.ConnectionDataItem.TransactionCount"/> instead.
+            </remarks>
+        </member>
+        <member name="P:bbv.Common.Data.ConnectionDataItem.CommandTimeout">
+            <summary>
+                Sets the SqlCommand.CommandTimeout in seconds for the next 
+                operation. The time will be reset to the default after the 
+                command has executed (insert, update etc.).
+            </summary>
+            <remarks>
+                The default for the CommandTimeout is 30 seconds. To wait
+                indefinitly, set CommandTimeout to 0. This should be avoided,
+                because the user may will wait forever.
+            </remarks>
+        </member>
+        <member name="T:bbv.Common.Data.DatabaseConcurrencyException">
+            <summary>
+                The exception that is thrown when a database error occured.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Data.DatabaseException">
+            <summary>
+                The exception that is thrown when a database error occured.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseException.#ctor(System.String)">
+            <summary>
+                Standard constructor variation with a message.
+            </summary>
+            <param name="message">The message for the exception.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseException.#ctor(System.String,System.Exception)">
+            <summary>
+                Standard constructor variation with a message and inner Exception.
+            </summary>
+            <param name="message">The message for the exception.</param>
+            <param name="inner">Inner Exception that was thrown.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                General constructor used by the serializing-mechanism of .NET
+            </summary>
+            <remarks>
+                This constructor is used implicitly during deserialization of this class.
+            </remarks>
+            <param name="info">Holds all the data needed to serialize or deserialize the exception.</param>
+            <param name="context">Describes the source and destination of the serialized stream.</param>
+        </member>
+        <member name="P:bbv.Common.Data.DatabaseException.ErrorCode">
+            <summary>
+                Returns the ErrorCode of an OleDbException (The HRESULT of the 
+                error). If no OleDbException is available, 0 will be returned.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.DatabaseException.IsTimeoutExpired">
+            <summary>
+                Indicates whether current Exception was caused by an ADO.NET Timeout.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Data.IClientException">
+            <summary>
+            	Represents an Exception with messages that can be shown to the user.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.IClientException.ShortMessage">
+            <summary>
+            	The short message that can be used as the title.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.IClientException.LongMessage">
+            <summary>
+            	The detailed description of the cause e.g. Timeout etc.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Data.IRetryException">
+            <summary>
+            If implemented by an Exception the recommended strategy to recover is to retry
+            the transaction or processing
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseConcurrencyException.#ctor(System.String)">
+            <summary>
+                Standard constructor variation with a message.
+            </summary>
+            <param name="message">The message for the exception.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseConcurrencyException.#ctor(System.String,System.Exception)">
+            <summary>
+                Standard constructor variation with a message and inner Exception.
+            </summary>
+            <param name="message">The message for the exception.</param>
+            <param name="inner">Inner Exception that was thrown.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseConcurrencyException.#ctor(System.String,System.Exception,System.Boolean,System.String,System.DateTime)">
+            <summary>
+                Overloaded constructor variation with a message, an inner Exception 
+                and an additional parameter for deleted Records.
+            </summary>
+            <param name="message">The message for the exception.</param>
+            <param name="inner">Inner Exception that was thrown.</param>
+            <param name="recordDeleted">Indicates whether the concurrency was from an already deleted record.</param>
+            <param name="visumGeaendert">The visum of the person, who has changed the record. Will be empty if on data is available.</param>
+            <param name="datumGeaendert">The date and time of the change if available. Will be DateTime.MinValue if no data is available.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseConcurrencyException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                General constructor used by the serializing-mechanism of .NET
+            </summary>
+            <remarks>
+                This constructor is used implicitly during deserialization of this class.
+            </remarks>
+            <param name="info">Holds all the data needed to serialize or deserialize the exception.</param>
+            <param name="context">Describes the source and destination of the serialized stream.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseConcurrencyException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                Method overridden for serializing of this exception.
+            </summary>
+            <remarks>
+                This method is implicitly used during serializing of this class.
+                We would not use to override this method, because we did not 
+                add any information to the DatabaseException. It is implemented
+                for demonstration only.
+            </remarks>
+            <param name="info">Holds all the data needed to serialize or deserialize the exception.</param>
+            <param name="context">Describes the source and destination of the serialized stream.</param>
+        </member>
+        <member name="P:bbv.Common.Data.DatabaseConcurrencyException.ShortMessage">
+            <summary>
+                The short message that can be used as the title.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.DatabaseConcurrencyException.LongMessage">
+            <summary>
+                The detailed description of the cause e.g. Timeout etc.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Data.DatabaseDeadlockException">
+            <summary>
+                The exception that is thrown when a database deadlock error occured.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseDeadlockException.#ctor(System.String)">
+            <summary>
+                Standard constructor variation with a message.
+            </summary>
+            <param name="message">The message for the exception.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseDeadlockException.#ctor(System.String,System.Exception)">
+            <summary>
+                Standard constructor variation with a message and inner Exception.
+            </summary>
+            <param name="message">The message for the exception.</param>
+            <param name="inner">Inner Exception that was thrown.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseDeadlockException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                General constructor used by the serializing-mechanism of .NET
+            </summary>
+            <remarks>
+                This constructor is used implicitly during deserialization of this class.
+            </remarks>
+            <param name="info">Holds all the data needed to serialize or deserialize the exception.</param>
+            <param name="context">Describes the source and destination of the serialized stream.</param>
+        </member>
+        <member name="P:bbv.Common.Data.DatabaseDeadlockException.ShortMessage">
+            <summary>
+                The short message that can be used as the title.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.DatabaseDeadlockException.LongMessage">
+            <summary>
+                The detailed description of the cause e.g. Timeout etc.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Data.DatabaseTimeoutException">
+            <summary>
+                The exception that is thrown when a database error occured.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseTimeoutException.#ctor(System.String)">
+            <summary>
+                Standard constructor variation with a message.
+            </summary>
+            <param name="message">The message for the exception.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseTimeoutException.#ctor(System.String,System.Exception)">
+            <summary>
+                Standard constructor variation with a message and inner Exception.
+            </summary>
+            <param name="message">The message for the exception.</param>
+            <param name="inner">Inner Exception that was thrown.</param>
+        </member>
+        <member name="M:bbv.Common.Data.DatabaseTimeoutException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+                General constructor used by the serializing-mechanism of .NET
+            </summary>
+            <remarks>
+                This constructor is used implicitly during deserialization of this class.
+            </remarks>
+            <param name="info">Holds all the data needed to serialize or deserialize the exception.</param>
+            <param name="context">Describes the source and destination of the serialized stream.</param>
+        </member>
+        <member name="P:bbv.Common.Data.DatabaseTimeoutException.ShortMessage">
+            <summary>
+                The short message that can be used as the title.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Data.DatabaseTimeoutException.LongMessage">
+            <summary>
+                The detailed description of the cause e.g. Timeout etc.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Data.IDbConnector">
+            <summary>
+            Summary description for IDbConnector.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.IDbConnector.CreateConnection(System.String)">
+            <summary>
+                Factory for creating an instance of a class implementing <see cref="T:System.Data.IDbConnection"/>.
+            </summary>
+            <param name="connectionString">The connection string that will be provided 
+                to the connection class.</param>
+            <returns>A newly created <see cref="T:System.Data.IDbConnection"/> object.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.IDbConnector.CreateCommand(System.Data.IDbConnection,System.Data.IDbTransaction,System.String,System.Data.IDataParameter[],System.Int32)">
+            <summary>
+                Factory for creating an instance of a class implementing <see cref="T:System.Data.IDbCommand"/>.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.IDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that command.</param>
+            <param name="sqlQuery">The sql query string to use as the select command. Update, Insert and Delete commands will be generated.</param>
+            <param name="parameters">An array of <see cref="T:System.Data.IDataParameter"/> to use with the sql query, typically with a stored procedure.</param>
+            <param name="commandTimeout">The default timeout in seconds that will be used to execute actions with that command.</param>
+            <returns>A newly created <see cref="T:System.Data.IDbCommand"/> object.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.IDbConnector.Update(System.Data.IDbConnection,System.Data.IDbTransaction,System.Data.DataRow,bbv.Common.Data.UpdateActions,System.Int32)">
+            <summary>
+                The Update action that will be performed against the datasource.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.IDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that action.</param>
+            <param name="dataRow">The <see cref="T:System.Data.DataRow"/> to update against the datasource.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.IDbConnector.Update(System.Data.IDbConnection,System.Data.IDbTransaction,System.Data.DataRow,bbv.Common.Data.UpdateActions,System.Int32)"/>. Use 
+                logical operators to include more than one action.</param>
+            <param name="commandTimeout">The timeout in seconds that will be used to execute the actions.</param>
+            <returns>The number of rows successfully updated.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.IDbConnector.Fill(System.Data.IDbConnection,System.Data.IDbTransaction,System.Data.DataSet,System.String,System.String,System.Data.IDataParameter[],System.Data.CommandType,System.Int32)">
+            <summary>
+                Fill's the <see cref="T:System.Data.DataSet"/> from the datasource.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.IDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that action.</param>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> to fill with data from the database.</param>
+            <param name="dataTableName">The name of the table that should be filled. Useful when more than one <see cref="T:System.Data.DataTable"/> exists in the <see cref="T:System.Data.DataSet"/>.</param>
+            <param name="sqlQuery">The sql query string to use as the select command.</param>
+            <param name="parameters">An array of <see cref="T:System.Data.IDataParameter"/> to use with the sql query, typically with a stored procedure.</param>
+            <param name="cmdType">The <see cref="T:System.Data.CommandType"/> to execute e.g. text or stored procedure.</param>
+            <param name="commandTimeout">The timeout in seconds that will be used to execute the fill.</param>
+            <returns>The number of rows filled into the <see cref="T:System.Data.DataSet"/>.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.IDbConnector.ExecuteSql(System.Data.IDbConnection,System.Data.IDbTransaction,System.String,System.Data.IDataParameter[],System.Int32)">
+            <summary>
+                Executes a given sql query against the datasource.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.IDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that action.</param>
+            <param name="sqlQuery">The sql query string to execute.</param>
+            <param name="parameters">An array of <see cref="T:System.Data.IDataParameter"/> to use with the sql query, typically with a stored procedure.</param>
+            <param name="commandTimeout">The timeout in seconds that will be used to execute the sql query.</param>
+            <returns>The number of database rows affected.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.IDbConnector.ExecuteSqlWithReturnValue(System.Data.IDbConnection,System.Data.IDbTransaction,System.String,System.Data.IDataParameter[],System.Int32)">
+            <summary>
+                Executes a given sql query against the datasource and returns it's result set.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.IDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that action.</param>
+            <param name="sqlQuery">The sql query string to execute.</param>
+            <param name="parameters">An array of <see cref="T:System.Data.IDataParameter"/> to use with the sql query, typically with a stored procedure.</param>
+            <param name="commandTimeout">The timeout in seconds that will be used to execute the sql query.</param>
+            <returns>The result set of the query. If the query returns a single integer value, you may cast it to <see cref="T:System.Int32"/>. Pay attention with NULL values.</returns>
+        </member>
+        <member name="T:bbv.Common.Data.SqlDbConnector">
+            <summary>
+                Handles all SqlClient specific actions for the BbvDataAdapter. Therefore
+                this class implements the IDbConnector interface.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.SqlDbConnector.#ctor">
+            <summary>
+                Creates an instance of <see cref="T:bbv.Common.Data.SqlDbConnector"/>.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.SqlDbConnector.CreateConnection(System.String)">
+            <summary>
+                Factory for creating an instance of a class implementing <see cref="T:System.Data.IDbConnection"/>.
+            </summary>
+            <param name="connectionString">The connection string that will be provided 
+                to the connection class.</param>
+            <returns>A newly created <see cref="T:System.Data.IDbConnection"/> object.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlDbConnector.CreateCommand(System.Data.IDbConnection,System.Data.IDbTransaction,System.String,System.Data.IDataParameter[],System.Int32)">
+            <summary>
+                Factory for creating an instance of a class implementing <see cref="T:System.Data.IDbCommand"/>.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.SqlDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that command.</param>
+            <param name="sqlQuery">The sql query string to use as the select command. Update, Insert and Delete commands will be generated.</param>
+            <param name="parameters">An array of <see cref="T:System.Data.IDataParameter"/> to use with the sql query, typically with a stored procedure.</param>
+            <param name="commandTimeout">The default timeout in seconds that will be used to execute actions with that command.</param>
+            <returns>A newly created <see cref="T:System.Data.IDbCommand"/> object.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlDbConnector.Update(System.Data.IDbConnection,System.Data.IDbTransaction,System.Data.DataRow,bbv.Common.Data.UpdateActions,System.Int32)">
+            <summary>
+                The Update action that will be performed against the datasource.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.SqlDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that action.</param>
+            <param name="dataRow">The <see cref="T:System.Data.DataRow"/> to update against the datasource.</param>
+            <param name="updateAction">Defines which actions (Insert, Update, Delete) 
+                you would like to perform wihtin that <see cref="M:bbv.Common.Data.SqlDbConnector.Update(System.Data.IDbConnection,System.Data.IDbTransaction,System.Data.DataRow,bbv.Common.Data.UpdateActions,System.Int32)"/>. Use 
+                logical operators to include more than one action.</param>
+            <param name="commandTimeout">The timeout in seconds that will be used to execute the actions.</param>
+            <returns>The number of rows successfully updated.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlDbConnector.Fill(System.Data.IDbConnection,System.Data.IDbTransaction,System.Data.DataSet,System.String,System.String,System.Data.IDataParameter[],System.Data.CommandType,System.Int32)">
+            <summary>
+                Fill's the <see cref="T:System.Data.DataSet"/> from the datasource.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.SqlDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that action.</param>
+            <param name="dataSet">The <see cref="T:System.Data.DataSet"/> to fill with data from the database.</param>
+            <param name="dataTableName">The name of the table that should be filled. Useful when more than one <see cref="T:System.Data.DataTable"/> exists in the <see cref="T:System.Data.DataSet"/>.</param>
+            <param name="sqlQuery">The sql query string to use as the select command.</param>
+            <param name="parameters">An array of <see cref="T:System.Data.IDataParameter"/> to use with the sql query, typically with a stored procedure.</param>
+            <param name="cmdType">The <see cref="T:System.Data.CommandType"/> to execute e.g. text or stored procedure.</param>
+            <param name="commandTimeout">The timeout in seconds that will be used to execute the fill.</param>
+            <returns>The number of rows filled into the <see cref="T:System.Data.DataSet"/>.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlDbConnector.ExecuteSql(System.Data.IDbConnection,System.Data.IDbTransaction,System.String,System.Data.IDataParameter[],System.Int32)">
+            <summary>
+                Executes a given sql query against the datasource.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.SqlDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that action.</param>
+            <param name="sqlQuery">The sql query string to execute.</param>
+            <param name="parameters">An array of <see cref="T:System.Data.IDataParameter"/> to use with the sql query, typically with a stored procedure.</param>
+            <param name="commandTimeout">The timeout in seconds that will be used to execute the sql query.</param>
+            <returns>The number of database rows affected.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlDbConnector.ExecuteSqlWithReturnValue(System.Data.IDbConnection,System.Data.IDbTransaction,System.String,System.Data.IDataParameter[],System.Int32)">
+            <summary>
+                Executes a given sql query against the datasource and returns it's result set.
+            </summary>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> created with <see cref="M:bbv.Common.Data.SqlDbConnector.CreateConnection(System.String)"/>.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> to use with that action.</param>
+            <param name="sqlQuery">The sql query string to execute.</param>
+            <param name="parameters">An array of <see cref="T:System.Data.IDataParameter"/> to use with the sql query, typically with a stored procedure.</param>
+            <param name="commandTimeout">The timeout in seconds that will be used to execute the sql query.</param>
+            <returns>The result set of the query. If the query returns a single integer value, you may cast it to <see cref="T:System.Int32"/>. Pay attention with NULL values.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlDbConnector.SyncRowUpdating(System.Object,System.Data.SqlClient.SqlRowUpdatingEventArgs)">
+            <summary>
+                Handles the <see cref="T:System.Data.SqlClient.SqlRowUpdatingEventHandler"/> to provide
+                the extra features of <see cref="T:bbv.Common.Data.BbvDataAdapter"/> to read back
+                the generated identity value.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="e">The <see cref="T:System.Data.SqlClient.SqlRowUpdatingEventArgs"/>.</param>
+        </member>
+        <member name="T:bbv.Common.Data.SqlExceptionHelper">
+            <summary>
+                Defines a class for helper methods supporting DatabaseAccess.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.SqlExceptionHelper.ERROR_DEADLOCK">
+            <summary>
+                These codes are identical to those in SQL Server 2000:
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.SqlExceptionHelper.ERROR_TIMEOUT">
+            <summary>
+                ADO.NET error codes are negativ for SqlClient:
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.SqlExceptionHelper.CreateDatabaseException(System.Exception,System.String,System.String)">
+            <summary>
+                DatabaseAccess internal handling of Exceptions while executing
+                commands against the database. We will wrap and return every 
+                Exception into DatabaseException.
+            </summary>
+            <param name="e">The Exception to handle.</param>
+            <param name="method">Method that thrown the original exception.</param>
+            <param name="sql">The SQL query that triggered the exception. 
+                An empty string will suppress the SQL query in the error message.</param>
+            <returns>A new exception that can be thrown.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlExceptionHelper.GetRowErrors(System.Data.DataSet)">
+            <summary>
+                Returns a string containing all errors of all rows in the <see cref="T:System.Data.DataSet"/>.
+            </summary>
+            <param name="myDataSet">The <see cref="T:System.Data.DataSet"/> to pull out the row errors.</param>
+            <returns>A string containing all errors of all rows in the <see cref="T:System.Data.DataSet"/>.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlExceptionHelper.CreateDatabaseConcurrencyDescription(System.Data.DataRow,System.Data.DataRow)">
+            <summary>
+            Generates a string describing the difference between the origninal row in the 
+            database and the row that failed to be updated
+            </summary>
+            <param name="rowInDb">the row reflecting the current values in the database</param>
+            <param name="rowToUpdate">the row that failed to be updated</param>
+            <returns>the string containing the description</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlExceptionHelper.CreateDatabaseConcurrencyException(System.Data.DBConcurrencyException,System.Data.SqlClient.SqlConnection,System.Data.SqlClient.SqlTransaction,System.String,System.String)">
+            <summary>
+                DatabaseAccess internal handling of Exceptions while executing
+                commands against the database. We will wrap and return every 
+                Exception into DatabaseException.
+            </summary>
+            <param name="e">The Exception to handle.</param>
+            <param name="connection">The <see cref="T:System.Data.IDbConnection"/> that can be 
+                used to get some extra information from the database in case of 
+                a concurrency exception.</param>
+            <param name="transaction">The <see cref="T:System.Data.IDbTransaction"/> that can be 
+                used to get some extra information from the database in case of 
+                a concurrency exception.</param>
+            <param name="table">The database table name that was involved while the 
+                execution failed.</param>
+            <param name="method">Method that thrown the original exception.</param>
+            <returns>A new exception that can be thrown.</returns>
+        </member>
+        <member name="M:bbv.Common.Data.SqlExceptionHelper.GetDbErrors(System.Data.SqlClient.SqlException)">
+            <summary>
+                Returns a extended description of the occured errors, which
+                are encapsulated in the SqlException.
+            </summary>
+            <param name="e">SqlException that contains the Errors collection.</param>
+            <returns>Description of SqlClient errors.</returns>
+        </member>
+        <member name="T:bbv.Common.Data.SyncConnectionList">
+            <summary>
+                Internal class holding all <see cref="T:bbv.Common.Data.ConnectionDataItem"/> entries
+                which will be added to the list per thread basis. Add and Retrieve
+                methods will be thread-safe through SyncRoot of the base class
+                <see cref="T:System.Collections.Hashtable"/>.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Data.SyncConnectionList.Add(bbv.Common.Data.ConnectionDataItem)">
+            <summary>
+                Adds a <see cref="T:bbv.Common.Data.ConnectionDataItem"/> into the <see cref="T:bbv.Common.Data.SyncConnectionList"/>.
+            </summary>
+            <remarks>
+                The key to add the <see cref="T:bbv.Common.Data.ConnectionDataItem"/> will be the 
+                <see cref="P:bbv.Common.Data.ConnectionDataItem.ThreadId"/> stored in the 
+                <see cref="T:bbv.Common.Data.ConnectionDataItem"/>.
+            </remarks>
+            <param name="dataItem"></param>
+        </member>
+        <member name="P:bbv.Common.Data.SyncConnectionList.Item(System.Int32)">
+            <value>
+                Accesses the value of the table name for the specific item.
+            </value>
+            <paramref name="eTable">Enum that identifies which table name to 
+                get.</paramref>
+        </member>
+        <member name="T:bbv.Common.Data.UpdateActions">
+            <summary>
+                Defines the possible update actions.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.UpdateActions.Update">
+            <summary>
+                Updatess all <see cref="T:System.Data.DataRow"/> with the <see cref="T:System.Data.DataRowState"/> 'modified' against the database.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.UpdateActions.Insert">
+            <summary>
+                Inserts all <see cref="T:System.Data.DataRow"/> with the <see cref="T:System.Data.DataRowState"/> 'added' into the database.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.UpdateActions.Delete">
+            <summary>
+                Deletes all <see cref="T:System.Data.DataRow"/> with the <see cref="T:System.Data.DataRowState"/> 'deleted' from the database.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Data.UpdateActions.All">
+            <summary>
+                Combines all available <see cref="T:bbv.Common.Data.UpdateActions"/> together.
+            </summary>
+        </member>
+    </members>
+</doc>

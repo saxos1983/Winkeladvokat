@@ -1,0 +1,147 @@
+﻿<Window x:Class="Winkeladvokat.GameBoardView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:winkeladvokat="clr-namespace:Winkeladvokat"
+        Title="Winkeladvokat" MinWidth="300" MinHeight="300" Height="600" Width="600"  Loaded="OnLoaded">
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="80" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" x:Name="Gameboard">
+            <UserControl>
+                <Grid Width="{Binding ElementName=MainGrid, Path=ActualHeight}">
+                    <Grid.Resources>
+                        <winkeladvokat:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+                    </Grid.Resources>
+                    <ItemsControl ItemsSource="{Binding Path=FieldViewModels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="8" Columns="8"></UniformGrid>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Black" BorderThickness="2">
+                                    <Grid x:Name="cellGrid" Height="{Binding ElementName=cellGrid, Path=Width}">
+                                        <Button x:Name="FieldWithNumberButton" 
+                                                    Height="{Binding ElementName=FieldWithNumberButton, Path=Width}" 
+                                                    Command="{Binding DataContext.PlaceTokenCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=ItemsControl}}" 
+                                                    CommandParameter="{Binding}">
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                    <Setter Property="Background" Value="White"/>
+                                                    <Setter Property="FontFamily" Value="Verdana"/>
+                                                    <Setter Property="FontSize" Value="24"/>
+                                                    <Setter Property="Content" Value="{Binding Path=Value}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=Value}" Value="0">
+                                                            <Setter Property="Content" Value=" " />
+                                                        </DataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding Path=Column}" Value="0" />
+                                                                <Condition Binding="{Binding Path=Row}" Value="0" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Background" Value="Red" />
+                                                        </MultiDataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding Path=Column}" Value="7" />
+                                                                <Condition Binding="{Binding Path=Row}" Value="0" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Background" Value="Green" />
+                                                        </MultiDataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding Path=Column}" Value="0" />
+                                                                <Condition Binding="{Binding Path=Row}" Value="7" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Background" Value="Yellow" />
+                                                        </MultiDataTrigger>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding Path=Column}" Value="7" />
+                                                                <Condition Binding="{Binding Path=Row}" Value="7" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Background" Value="Blue" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                        <Button x:Name="TokenButton" Content="Token" 
+                                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                                Visibility="{Binding HasToken, Converter={ StaticResource BoolToVisibilityConverter}}" 
+                                                Command="{Binding DataContext.PlaceTokenCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=1, AncestorType=ItemsControl}}" 
+                                                CommandParameter="{Binding}" >
+                                            <Button.Template>
+                                                <ControlTemplate>
+                                                    <Grid Background="White">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                            <ColumnDefinition Width="{Binding TokenSize}"></ColumnDefinition>
+                                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="1*"></RowDefinition>
+                                                            <RowDefinition Height="{Binding TokenSize}"></RowDefinition>
+                                                            <RowDefinition Height="1*"></RowDefinition>
+                                                        </Grid.RowDefinitions>
+                                                        <Ellipse Grid.Column="1" Grid.Row="1">
+                                                            <Ellipse.Fill>
+                                                                <SolidColorBrush Color="{Binding Path=TokenColor}"></SolidColorBrush>
+                                                            </Ellipse.Fill>
+                                                        </Ellipse>
+                                                        <TextBlock Grid.Column="1" Grid.Row="1" 
+                                                                   VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                                                   Text="{Binding TokenName}"
+                                                                   FontSize="24" FontFamily="Verdana" FontWeight="Bold" />
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock x:Name="Message" 
+                 HorizontalAlignment="Center" 
+                 VerticalAlignment="Center" 
+                 Text="{Binding MoveResultText}" 
+                 Visibility="{Binding IsMessageVisible,Converter={StaticResource BoolToVisibilityConverter}}"
+                 FontFamily="Verdana"
+                 FontSize="50"
+                 FontWeight="Bold"
+                 Foreground="Blue"
+                 Background="White"
+                 Margin="20"
+                 TextWrapping="Wrap"></TextBlock>
+                </Grid>
+            </UserControl>
+        </DockPanel>
+        <Border Grid.Row="1" BorderThickness="2" BorderBrush="Black" CornerRadius="5" Margin="0, 10, 0, 10" Width="{Binding ElementName=MainGrid, Path=ActualHeight}">
+            <ItemsControl ItemsSource="{Binding Scores}" HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="10, 0, 0, 0">
+                            <Ellipse Width="38" Height="38">
+                                <Ellipse.Fill>
+                                    <SolidColorBrush Color="{Binding Path=Color}"></SolidColorBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <TextBlock Text="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Verdana" FontSize="18"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,1354 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.IO</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.IO.DriveUtilities">
+            <summary>
+            Provides functionality to get drive information.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.DriveUtilities.GetDriveFreeSpace(System.String)">
+            <summary>
+            Gets the drive free space.
+            </summary>
+            <param name="driveName">Name of the drive.</param>
+            <returns>free space in Byte</returns>
+        </member>
+        <member name="M:bbv.Common.IO.DriveUtilities.GetTotalDriveSpace(System.String)">
+            <summary>
+            Gets the total drive space.
+            </summary>
+            <param name="driveName">Name of the drive.</param>
+            <returns>total drive space in Byte</returns>
+        </member>
+        <member name="M:bbv.Common.IO.DriveUtilities.GetFolderSize(System.String,System.Boolean)">
+            <summary>
+            Gets the size of the folder.
+            </summary>
+            <param name="path">The path of the folder</param>
+            <param name="recursive">if set to <c>true</c> [recursive].</param>
+            <returns>folder size in Byte</returns>
+        </member>
+        <member name="M:bbv.Common.IO.DriveUtilities.FormatByteSize(System.Double)">
+            <summary>
+            Transforms the space in Bytes into more Readable form. 
+            </summary>
+            <param name="bytes">The bytes.</param>
+            <returns>Transformed Size.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.DriveUtilities.GetFolderSizeFlat(System.String)">
+            <summary>
+            Gets the folder size flat.
+            </summary>
+            <param name="path">The path of the folder.</param>
+            <returns>The flat size of the folder.</returns>
+        </member>
+        <member name="T:bbv.Common.IO.FileActionCommand">
+            <summary>
+            Base class for recursive file actions. The action is executed for each file in the source path.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.MoveRecursiv(System.String,System.String)">
+            <summary>
+            Moves files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="destinationPath">Destination Path</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.MoveRecursiv(System.String,System.String,System.String)">
+            <summary>
+            Moves files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="destinationPath">Destination Path</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.MoveRecursiv(System.String,System.Collections.ArrayList,System.String)">
+            <summary>
+            Moves files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+            <param name="destinationPath">Destination Path</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.MoveRecursiv(System.String,System.String,System.Collections.ArrayList,System.String)">
+            <summary>
+            Moves files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+            <param name="destinationPath">Destination Path</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.CopyRecursiv(System.String,System.String,System.Boolean)">
+            <summary>
+            Copy files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to copy.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.CopyRecursiv(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Copy files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to copy.</param>
+            <param name="searchPattern">Only files that match this pattern are copied.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.CopyRecursiv(System.String,System.Collections.ArrayList,System.String,System.Boolean)">
+            <summary>
+            Copy files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to copy.</param>
+            <param name="excludeDirs">Directories to exclude from copy.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.CopyRecursiv(System.String,System.String,System.Collections.ArrayList,System.String,System.Boolean)">
+            <summary>
+            Copy files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to copy.</param>
+            <param name="searchPattern">Only files that match this pattern are copied.</param>
+            <param name="excludeDirs">Directories to exclude from copy.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.NumberOfDirsAndFiles(System.String)">
+            <summary>
+            Count files and directories recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to count.</param>
+            <returns>Returns number of files an directories in directory tree.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.NumberOfDirsAndFiles(System.String,System.String)">
+            <summary>
+            Count files and directories recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to count.</param>
+            <param name="searchPattern">Only files that match this pattern are counted.</param>
+            <returns>Returns number of files an directories in directory tree.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.NumberOfDirsAndFiles(System.String,System.Collections.ArrayList)">
+            <summary>
+            Count files and directories recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to count.</param>
+            <param name="excludeDirs">Directories to exclude from count.</param>
+            <returns>Returns number of files an directories in directory tree.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.NumberOfDirsAndFiles(System.String,System.String,System.Collections.ArrayList)">
+            <summary>
+            Count files and directories recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to count.</param>
+            <param name="searchPattern">Only files that match this pattern are counted.</param>
+            <param name="excludeDirs">Directories to exclude from count.</param>
+            <returns>Returns number of files an directories in directory tree.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetFilesRecursiv(System.String)">
+            <summary>
+            Gets files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to get.</param>
+            <returns>Returns an arraylist of filenames.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetFilesRecursiv(System.String,System.String)">
+            <summary>
+            Gets files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to get.</param>
+            <param name="searchPattern">Only files that match this pattern are getted.</param>
+            <returns>Returns an arraylist of filenames.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetFilesRecursiv(System.String,System.Collections.ArrayList)">
+            <summary>
+            Gets files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to get.</param>
+            <param name="excludeDirs">Directories to exclude from get.</param>
+            <returns>Returns an arraylist of filenames.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetFilesRecursiv(System.String,System.String,System.Collections.ArrayList)">
+            <summary>
+            Gets files recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to get.</param>
+            <param name="searchPattern">Only files that match this pattern are getted.</param>
+            <param name="excludeDirs">Directories to exclude from get.</param>
+            <returns>Returns an arraylist of filenames.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetSizeRecursiv(System.String)">
+            <summary>
+            Gets file size recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to calculate filesize.</param>
+            <returns>Returns size of directory tree.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetSizeRecursiv(System.String,System.String)">
+            <summary>
+            Gets file size recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to calculate filesize.</param>
+            <param name="searchPattern">Only files that match this pattern are counted.</param>
+            <returns>Returns size of directory tree.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetSizeRecursiv(System.String,System.Collections.ArrayList)">
+            <summary>
+            Gets file size recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to calculate filesize.</param>
+            <param name="excludeDirs">Directories to exclude from filesize.</param>
+            <returns>Returns size of directory tree.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetSizeRecursiv(System.String,System.String,System.Collections.ArrayList)">
+            <summary>
+            Gets file size recursively.
+            </summary>
+            <param name="sourcePath">Source Path at which to start to calculate filesize.</param>
+            <param name="searchPattern">Only files that match this pattern are counted.</param>
+            <param name="excludeDirs">Directories to exclude from filesize.</param>
+            <returns>Returns size of directory tree.</returns>
+        </member>
+        <member name="F:bbv.Common.IO.FileActionCommand.sourcePath">
+            <summary>
+            Source Path at which to start the action.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start the action.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.#ctor(System.String,System.Collections.ArrayList)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start the action.</param>
+            <param name="excludeDirs">Directories to exclude from action.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start the action.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.#ctor(System.String,System.String,System.Collections.ArrayList)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start the action.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="excludeDirs">Directories to exclude from action.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.FileAction(System.String)">
+            <summary>
+            Override this method to execute the action.
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.ExecuteRecursiv(System.String)">
+            <summary>
+            Called for each file in the source path and each underling directory <see cref="M:bbv.Common.IO.FileActionCommand.FileAction(System.String)"/>. 
+            This i sthe recursive method.
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.OnFileActionExecuted(System.String)">
+            <summary>
+            Fires <see cref="E:bbv.Common.IO.FileActionCommand.FileActionExecuted"/> event.
+            </summary>
+            <param name="fileName">Name of the file that has been processed.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionCommand.GetDiffPath(System.String,System.String)">
+            <summary>
+            Returns the difference between the to given path.
+            </summary>
+            <param name="path"></param>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="E:bbv.Common.IO.FileActionCommand.FileActionExecuted">
+            <summary>
+            This event is fired after FileAction has completed a file.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.IO.FileActionCommand.IgnoreLockedFiles">
+            <summary>
+            Indicates whether to ignore locked files or not. If locked files are not ignored, an exception is thrown.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.IO.FileActionExecutedEventHandler">
+            <summary>
+            Delegate for <see cref="E:bbv.Common.IO.FileActionCommand.FileActionExecuted"/> event.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.IO.FileActionExecutedEventArgs">
+            <summary>
+            Defines the EventArgs used fro event <see cref="E:bbv.Common.IO.FileActionCommand.FileActionExecuted"/>
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FileActionExecutedEventArgs.FileName">
+            <summary>
+            Name of the file tha has bee processed.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.FileActionExecutedEventArgs.#ctor(System.String)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="T:bbv.Common.IO.FileMove">
+            <summary>
+            Moves files recursivly
+            </summary>
+            <example>
+            Normally use static method on <see cref="M:bbv.Common.IO.FileActionCommand.MoveRecursiv(System.String,System.String)"/>:
+            <code>
+            FileActionCommand.FileMove(sourcePath, searchPattern, excludeDirs, destinationPath);
+            </code>
+            In special cases you may use:
+            <code>
+            FileMove fm = new FileMove(sourcePath, searchPattern, excludeDirs, destinationPath);
+            fm.ExecuteRecursiv(sourcePath);
+            </code>
+            </example>
+        </member>
+        <member name="F:bbv.Common.IO.FileMove.destinationPath">
+            <summary>
+            Destination path
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.FileMove.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden. Default is false.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileMove.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="destinationPath">Destination Path</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileMove.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are moved.</param>
+            <param name="destinationPath">Destination Path</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileMove.#ctor(System.String,System.Collections.ArrayList,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+            <param name="destinationPath">Destination Path</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileMove.#ctor(System.String,System.Collections.ArrayList,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileMove.#ctor(System.String,System.String,System.Collections.ArrayList,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+            <param name="destinationPath">Destination Path</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileMove.FileAction(System.String)">
+            <summary>
+            Moves the given file to destination path.
+            </summary>
+            <param name="fileName">File to move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileMove.FileAction(System.String,System.String@)">
+            <summary>
+            Moves the given file to destination path.
+            </summary>
+            <param name="fileName">File to move.</param>
+            <param name="destinationFilePath">Path of the moved file (new).</param>
+        </member>
+        <member name="T:bbv.Common.IO.FileCopy">
+            <summary>
+            Copies files recursivly
+            </summary>
+            <example>
+            Normally use static method on <see cref="M:bbv.Common.IO.FileActionCommand.CopyRecursiv(System.String,System.String,System.Boolean)"/>:
+            <code>
+            FileActionCommand.FileCopy(sourcePath, searchPattern, excludeDirs, destinationPath, overwrite);
+            </code>
+            In special cases you may use:
+            <code>
+            FileCopy fc = new FileCopy(sourcePath, searchPattern, excludeDirs, destinationPath, overwrite);
+            fc.ExecuteRecursiv(sourcePath);
+            </code>
+            </example>
+        </member>
+        <member name="M:bbv.Common.IO.FileCopy.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileCopy.#ctor(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileCopy.#ctor(System.String,System.Collections.ArrayList,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileCopy.#ctor(System.String,System.String,System.Collections.ArrayList,System.String,System.Boolean)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+            <param name="destinationPath">Destination Path</param>
+            <param name="overwrite">True if existing files should be overriden.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileCopy.FileAction(System.String)">
+            <summary>
+            Copies the given file to destination path.
+            </summary>
+            <param name="fileName">File to copy.</param>
+        </member>
+        <member name="T:bbv.Common.IO.FileSize">
+            <summary>
+            Calculates size of a directory tree.
+            </summary>
+            <example>
+            Normally use static method on <see cref="M:bbv.Common.IO.FileActionCommand.GetSizeRecursiv(System.String)"/>:
+            <code>
+            int size = FileActionCommand.FileSize(sourcePath, searchPattern, excludeDirs);
+            </code>
+            In special cases you may use:
+            <code>
+            FileSize fs = new FileSize(sourcePath, searchPattern, excludeDirs);
+            fs.ExecuteRecursiv(sourcePath);
+            int size = fs.Size;
+            </code>
+            </example>
+        </member>
+        <member name="M:bbv.Common.IO.FileSize.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileSize.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileSize.#ctor(System.String,System.Collections.ArrayList)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileSize.#ctor(System.String,System.String,System.Collections.ArrayList)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileSize.FileAction(System.String)">
+            <summary>
+            Adds size the given file.
+            </summary>
+            <param name="fileName">Found file</param>
+        </member>
+        <member name="P:bbv.Common.IO.FileSize.Size">
+            <summary>
+            Gets size of the directory tree.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.IO.NumberOfDirsAndFiles">
+            <summary>
+            Calculates how many files and directories are in the tree.
+            </summary>
+            <example>
+            Normally use static method on <see cref="M:bbv.Common.IO.FileActionCommand.NumberOfDirsAndFiles(System.String)"/>:
+            <code>
+            int nrOfFilesAndDirectories = FileActionCommand.NumberOfDirsAndFiles(sourcePath, searchPattern, excludeDirs);
+            </code>
+            In special cases you may use:
+            <code>
+            NumberOfDirsAndFiles nof = new NumberOfDirsAndFiles(sourcePath, searchPattern, excludeDirs);
+            nof.ExecuteRecursiv(sourcePath);
+            int nrOfFilesAndDirectories = nof.Count;
+            </code>
+            </example>
+        </member>
+        <member name="M:bbv.Common.IO.NumberOfDirsAndFiles.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.NumberOfDirsAndFiles.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+        </member>
+        <member name="M:bbv.Common.IO.NumberOfDirsAndFiles.#ctor(System.String,System.Collections.ArrayList)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.NumberOfDirsAndFiles.#ctor(System.String,System.String,System.Collections.ArrayList)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.NumberOfDirsAndFiles.ExecuteRecursiv(System.String)">
+            <summary>
+            Called for each directory in the source path -> Count + 1
+            </summary>
+            <param name="path"></param>
+        </member>
+        <member name="M:bbv.Common.IO.NumberOfDirsAndFiles.FileAction(System.String)">
+            <summary>
+            Called each time a file is found -> Count + 1
+            </summary>
+            <param name="fileName">Found file</param>
+        </member>
+        <member name="P:bbv.Common.IO.NumberOfDirsAndFiles.Count">
+            <summary>
+            Gets number of files and directories in tree.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.IO.FileGetter">
+            <summary>
+            Gets all files inside a directory tree.
+            </summary>
+            <example>
+            Normally use static method <see cref="M:bbv.Common.IO.FileActionCommand.GetFilesRecursiv(System.String)"/>:
+            <code>
+            ArrayList files = FileActionCommand.GetFilesRecursiv(sourcePath, searchPattern, excludeDirs);
+            </code>
+            In special cases you may use:
+            <code>
+            FileGetter fg = new FileGetter(sourcePath, searchPattern, excludeDirs);
+            fg.ExecuteRecursiv(sourcePath);
+            ArrayList files = fg.Files;
+            </code>
+            </example>
+        </member>
+        <member name="M:bbv.Common.IO.FileGetter.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileGetter.#ctor(System.String,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileGetter.#ctor(System.String,System.Collections.ArrayList)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileGetter.#ctor(System.String,System.String,System.Collections.ArrayList)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="sourcePath">Source Path at which to start to move.</param>
+            <param name="searchPattern">Only files that match this pattern are taken for the command.</param>
+            <param name="excludeDirs">Directories to exclude from move.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FileGetter.FileAction(System.String)">
+            <summary>
+            Called each time a file is found.
+            </summary>
+            <param name="fileName">Found file</param>
+        </member>
+        <member name="P:bbv.Common.IO.FileGetter.Files">
+            <summary>
+            Gets all fiels in the tree.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.IO.FilesystemHelper">
+            <summary>
+            Contains static methods to get informations about Filesystem.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.FilesystemHelper.ConvertBytes(System.Double,bbv.Common.IO.FilesystemHelper.ByteUnit)">
+            <summary>
+            Converts a byte value into the requested <see cref="T:bbv.Common.IO.FilesystemHelper.ByteUnit"/>.
+            </summary>
+            <param name="bytes">The byte value to convert.</param>
+            <param name="unit">The <see cref="T:bbv.Common.IO.FilesystemHelper.ByteUnit"/> to convert into.</param>
+            <returns>
+            Returns a double value in the <see cref="T:bbv.Common.IO.FilesystemHelper.ByteUnit"/> requested by the caller.
+            </returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Exception will be thrown if the <see cref="T:bbv.Common.IO.FilesystemHelper.ByteUnit"/> enumeration 
+            was out of the defined range.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.FilesystemHelper.GetDiskFreeSpace(System.String)">
+            <summary>
+            Gets the free space left on the disk given by a directory.
+            </summary>
+            <param name="directory">Directory where the free disk space should be counted.</param>
+            <returns>
+            Returns the free disk space in bytes, that can be converted by the 
+            <see cref="M:bbv.Common.IO.FilesystemHelper.ConvertBytes(System.Double,bbv.Common.IO.FilesystemHelper.ByteUnit)"/> method or by calling the overloaded 
+            version of this method.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.IO.FilesystemHelper.GetDiskFreeSpace(System.String,bbv.Common.IO.FilesystemHelper.ByteUnit)">
+            <summary>
+            Overloaded method that gets the free space left on the disk given by a directory.
+            </summary>
+            <param name="directory">Directory where the free disk space should be counted.</param>
+            <param name="unit">The <see cref="T:bbv.Common.IO.FilesystemHelper.ByteUnit"/> in which the result should be returned.</param>
+            <returns>
+            Returns the free disk space in the requested unit, i.e. MegaBytes / GigaBytes and so on.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.IO.FilesystemHelper.NormalizeDirectory(System.String)">
+            <summary>
+            Adds a "\" to the directory if there is none.
+            </summary>
+            <param name="directory">The directory to normalize.</param>
+            <returns>
+            Returns the normalized directory always ending with a "\".
+            </returns>
+        </member>
+        <member name="T:bbv.Common.IO.FilesystemHelper.ByteUnit">
+            <summary>
+            Specifies the unit for converting from i.e. Bytes to MegaBytes.
+            </summary>
+            <remarks>
+            The values are tightly coupled to the <see cref="M:bbv.Common.IO.FilesystemHelper.ConvertBytes(System.Double,bbv.Common.IO.FilesystemHelper.ByteUnit)"/> method!
+            </remarks>
+        </member>
+        <member name="F:bbv.Common.IO.FilesystemHelper.ByteUnit.Bytes">
+            <summary>
+            Unit is byte
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FilesystemHelper.ByteUnit.Kilobytes">
+            <summary>
+            Unit is Kilobytes
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FilesystemHelper.ByteUnit.Megabytes">
+            <summary>
+            Unit is Megabytes
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FilesystemHelper.ByteUnit.Gigabytes">
+            <summary>
+            Unit is Gigabytes
+            </summary>
+        </member>
+        <member name="T:bbv.Common.IO.FolderWatcher">
+            <summary>
+            Implements the FolderWatcher class. Offers function to observe folders for file changes.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.IO.IFolderWatcher">
+            <summary>
+            Interface for the Folder Watcher class. Offers function to observe folders for file changes.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.IFolderWatcher.StartObservation">
+            <summary>
+            Initialize the file watcher who are observing the given directory for new files
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.IFolderWatcher.StopObservation">
+            <summary>
+            Stops the observation.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.IFolderWatcher.GetCurrentAvailableFiles">
+            <summary>
+            Gets the current available files stored in the defined folder and matching to the filter criteria.
+            </summary>
+            <returns>A list of all available files in the monitored folder and matching to the given filter</returns>
+        </member>
+        <member name="E:bbv.Common.IO.IFolderWatcher.FileChanged">
+            <summary>
+            Occurs when a new file is recognized or a file is changed. The event arguments contains the found path.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.IO.IFolderWatcher.Folder">
+            <summary>
+            Gets or sets the folder which will be observed.
+            </summary>
+            <value>The folder.</value>
+        </member>
+        <member name="P:bbv.Common.IO.IFolderWatcher.Filter">
+            <summary>
+            Gets or sets the filter it is a normal file system filter string like "*.txt".
+            </summary>
+            <value>The filter.</value>
+        </member>
+        <member name="F:bbv.Common.IO.FolderWatcher.FilterTimeWindow">
+            <summary>
+            The <see cref="T:bbv.Common.Events.EventFilter`1"/> timeout.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FolderWatcher.eventFilter">
+            <summary>
+            Filters the original <see cref="T:System.IO.FileSystemWatcher"/> events to prevent to much events for the user of the <see cref="T:bbv.Common.IO.FolderWatcher"/>.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FolderWatcher.log">
+            <summary>
+            log4net Logger
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FolderWatcher.filesystemwatcher">
+            <summary>
+            .NET file system watcher
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FolderWatcher.filter">
+            <summary>
+            File filter - it is a file system filter string like "*.txt".
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.FolderWatcher.watchedFolder">
+            <summary>
+            The folder who is monitored from the <see cref="T:System.IO.FileSystemWatcher"/>
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.FolderWatcher.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.IO.FolderWatcher"/> class.
+            </summary>
+            <param name="folder">The folder.</param>
+            <param name="filter">The filter.</param>
+        </member>
+        <member name="M:bbv.Common.IO.FolderWatcher.StartObservation">
+            <summary>
+            Initialize the file watcher who are observing the given directory for new files
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.FolderWatcher.StopObservation">
+            <summary>
+            Stops the observation.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.FolderWatcher.GetCurrentAvailableFiles">
+            <summary>
+            Gets the current available files stored in the defined folder and matching to the filter criteria.
+            </summary>
+            <returns>A list of all available files in the monitored folder and matching to the given filter</returns>
+        </member>
+        <member name="M:bbv.Common.IO.FolderWatcher.EventFilterOnFilteredEventRaised(System.Object,System.IO.FileSystemEventArgs)">
+            <summary>
+            Handles events raised from the Event filter. The event is the last original event.
+            </summary>
+            <param name="sender">The original sender of the event</param>
+            <param name="e">Event arguments in this case the <see cref="T:System.IO.FileSystemEventArgs"/></param>
+        </member>
+        <member name="E:bbv.Common.IO.FolderWatcher.FileChanged">
+            <summary>
+            Occurs when a new file is recognized. The event arguments contains the found filename.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.IO.FolderWatcher.Folder">
+            <summary>
+            Gets or sets the folder which will be observed.
+            </summary>
+            <value>The folder.</value>
+        </member>
+        <member name="P:bbv.Common.IO.FolderWatcher.Filter">
+            <summary>
+            Gets or sets the filter it is a file system filter string like "*.txt".
+            </summary>
+            <value>The filter.</value>
+        </member>
+        <member name="T:bbv.Common.IO.ITextReader">
+            <summary>
+            Contains methods to read input data into a string or a stream.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.ITextReader.GetString">
+            <summary>
+            Reads the complete input data as string.
+            </summary>
+            <returns>The data as a string.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.ITextReader.GetStream">
+            <summary>
+            Gets the stream of the input data.
+            </summary>
+            <returns>The data as a stream.</returns>
+        </member>
+        <member name="T:bbv.Common.IO.ITextWriter">
+            <summary>
+            Contains methods to write text to the specified output.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.ITextWriter.Write(System.String)">
+            <summary>
+            Writes the text to the specified output.
+            </summary>
+            <param name="content">The filecontent.</param>
+        </member>
+        <member name="M:bbv.Common.IO.ITextWriter.Write(System.IO.Stream,System.Int32)">
+            <summary>
+            Writes the stream to the specified output.
+            </summary>
+            <param name="stream">The stream.</param>
+            <param name="bufferSize">The size of the buffer.</param>
+        </member>
+        <member name="T:bbv.Common.IO.StreamDecoratorStream">
+            <summary>
+            Abstract decorator class for a Stream
+            </summary>
+            <remarks>
+            <para>
+            This class is used to implement stream decorator classes.
+            For creating a new stream decorator derive a new class from this one and override
+            the methods that you want to decorate. All methods that are not overwritten
+            are passed to the decorated stream.
+            </para>
+            <para>
+            All methods throw a NoStreamException when no stream is assigned to this class
+            at the time a method is called.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:bbv.Common.IO.StreamDecoratorStream.decoratedStream">
+            <summary>
+            The decorated stream
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.IO.StreamDecoratorStream"/> class.
+            </summary>
+            <param name="decoratedStream">The decorated stream.</param>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.BeginRead(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)">
+            <summary>
+            Begins an asynchronous read operation.
+            </summary>
+            <param name="buffer">The buffer to read the data into.</param>
+            <param name="offset">The byte offset in buffer at which to begin writing data read from the stream.</param>
+            <param name="count">The maximum number of bytes to read.</param>
+            <param name="callback">An optional asynchronous callback, to be called when the read is complete.</param>
+            <param name="state">A user-provided object that distinguishes this particular asynchronous read request 
+            from other requests.</param>
+            <returns>
+            An <see cref="T:System.IAsyncResult"></see> that represents the asynchronous read, which could still be 
+            pending.
+            </returns>
+            <exception cref="T:System.IO.IOException">Attempted an asynchronous read past the end of the stream, or a disk error 
+            occurs. </exception>
+            <exception cref="T:System.NotSupportedException">The current Stream implementation does not support the read 
+            operation. </exception>
+            <exception cref="T:System.ArgumentException">One or more of the arguments is invalid. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.EndRead(System.IAsyncResult)">
+            <summary>
+            Waits for the pending asynchronous read to complete.
+            </summary>
+            <param name="asyncResult">The reference to the pending asynchronous request to finish.</param>
+            <returns>
+            The number of bytes read from the stream, between zero (0) and the number of bytes you requested. 
+            Streams return zero (0) only at the end of the stream, otherwise, they should block until at least one 
+            byte is available.
+            </returns>
+            <exception cref="T:System.ArgumentException">asyncResult did not originate from a 
+            <see cref="M:bbv.Common.IO.StreamDecoratorStream.BeginRead(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)">
+            </see> method on the current stream.</exception>
+            <exception cref="T:System.ArgumentNullException">asyncResult is null. </exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            When overridden in a derived class, reads a sequence of bytes from the current stream and advances the 
+            position within the stream by the number of bytes read.
+            </summary>
+            <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte 
+            array with the values between offset and (offset + count - 1) replaced by the bytes read from the current 
+            source.</param>
+            <param name="offset">The zero-based byte offset in buffer at which to begin storing the data read from 
+            the current stream.</param>
+            <param name="count">The maximum number of bytes to be read from the current stream.</param>
+            <returns>
+            The total number of bytes read into the buffer. This can be less than the number of bytes requested if 
+            that many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+            </returns>
+            <exception cref="T:System.ArgumentException">The sum of offset and count is larger than the buffer length.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+            <exception cref="T:System.NotSupportedException">The stream does not support reading.</exception>
+            <exception cref="T:System.ArgumentNullException">buffer is null. </exception>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">offset or count is negative. </exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.ReadByte">
+            <summary>
+            Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at 
+            the end of the stream.
+            </summary>
+            <returns>
+            The unsigned byte cast to an Int32, or -1 if at the end of the stream.
+            </returns>
+            <exception cref="T:System.NotSupportedException">The stream does not support reading. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.BeginWrite(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)">
+            <summary>
+            Begins an asynchronous write operation.
+            </summary>
+            <param name="buffer">The buffer to write data from.</param>
+            <param name="offset">The byte offset in buffer from which to begin writing.</param>
+            <param name="count">The maximum number of bytes to write.</param>
+            <param name="callback">An optional asynchronous callback, to be called when the write is complete.</param>
+            <param name="state">A user-provided object that distinguishes this particular asynchronous write request 
+            from other requests.</param>
+            <returns> An IAsyncResult that represents the asynchronous write, which could still be pending.</returns>
+            <exception cref="T:System.NotSupportedException">The current Stream implementation does not support the write 
+            operation. </exception>
+            <exception cref="T:System.IO.IOException">Attempted an asynchronous write past the end of the stream, 
+            or a disk error occurs. </exception>
+            <exception cref="T:System.ArgumentException">One or more of the arguments is invalid. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.EndWrite(System.IAsyncResult)">
+            <summary>
+            Ends an asynchronous write operation.
+            </summary>
+            <param name="asyncResult">A reference to the outstanding asynchronous I/O request.</param>
+            <exception cref="T:System.ArgumentNullException">asyncResult is null. </exception>
+            <exception cref="T:System.ArgumentException">asyncResult did not originate from a 
+            <see cref="M:bbv.Common.IO.StreamDecoratorStream.BeginWrite(System.Byte[],System.Int32,System.Int32,System.AsyncCallback,System.Object)"/>
+            method on the current stream. </exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            When overridden in a derived class, writes a sequence of bytes to the current stream and advances the 
+            current position within this stream by the number of bytes written.
+            </summary>
+            <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.
+            </param>
+            <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current 
+            stream.</param>
+            <param name="count">The number of bytes to be written to the current stream.</param>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.NotSupportedException">The stream does not support writing. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
+            <exception cref="T:System.ArgumentNullException">buffer is null. </exception>
+            <exception cref="T:System.ArgumentException">The sum of offset and count is greater than the buffer length.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">offset or count is negative. </exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.WriteByte(System.Byte)">
+            <summary>
+            Writes a byte to the current position in the stream and advances the position within the stream by one byte.
+            </summary>
+            <param name="value">The byte to write to the stream.</param>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
+            <exception cref="T:System.NotSupportedException">The stream does not support writing, or the stream is already 
+            closed. </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.Close">
+            <summary>
+            Closes the current stream and releases any resources (such as sockets and file handles) associated with 
+            the current stream.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.Flush">
+            <summary>
+            When overridden in a derived class, clears all buffers for this stream and causes any buffered data to 
+            be written to the underlying device.
+            </summary>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <summary>
+            When overridden in a derived class, sets the position within the current stream.
+            </summary>
+            <param name="offset">A byte offset relative to the origin parameter.</param>
+            <param name="origin">A value of type <see cref="T:System.IO.SeekOrigin"></see> indicating the reference 
+            point used to obtain the new position.</param>
+            <returns>
+            The new position within the current stream.
+            </returns>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.NotSupportedException">The stream does not support seeking, such as if the stream 
+            is constructed from a pipe or console output. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. 
+            </exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.SetLength(System.Int64)">
+            <summary>
+            When overridden in a derived class, sets the length of the current stream.
+            </summary>
+            <param name="value">The desired length of the current stream in bytes.</param>
+            <exception cref="T:System.NotSupportedException">The stream does not support both writing and seeking, 
+            such as if the stream is constructed from a pipe or console output. </exception>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.ThrowNoStreamException">
+            <summary>
+            Derived classes can override this method to handle cases where a method is called while the decorated 
+            device is not assigned.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.SetStream(System.IO.Stream)">
+            <summary>
+            Sets the stream that shall be decorated.
+            </summary>
+            <param name="stream">The stream that shall be decorated.</param>
+        </member>
+        <member name="M:bbv.Common.IO.StreamDecoratorStream.AssertStreamNotNull">
+            <summary>
+            Asserts the stream is not null.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.IO.StreamDecoratorStream.CanRead">
+            <summary>
+            Gets a value indicating whether the current stream supports reading.
+            </summary>
+            <value></value>
+            <returns>true if the stream supports reading; otherwise, false.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="P:bbv.Common.IO.StreamDecoratorStream.CanSeek">
+            <summary>
+            Gets a value indicating whether the current stream supports seeking.
+            </summary>
+            <value></value>
+            <returns>true if the stream supports seeking; otherwise, false.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="P:bbv.Common.IO.StreamDecoratorStream.CanWrite">
+            <summary>
+            Gets a value indicating whether the current stream supports writing.
+            </summary>
+            <value></value>
+            <returns>true if the stream supports writing; otherwise, false.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="P:bbv.Common.IO.StreamDecoratorStream.Length">
+            <summary>
+            Gets the length in bytes of the stream.
+            </summary>
+            <value></value>
+            <returns>A long value representing the length of the stream in bytes.</returns>
+            <exception cref="T:System.NotSupportedException">The stream does not support seeking.</exception>
+            <exception cref="T:System.ObjectDisposedException">Property was called after the stream was closed.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="P:bbv.Common.IO.StreamDecoratorStream.Position">
+            <summary>
+            Gets or sets the position within the current stream.
+            </summary>
+            <value></value>
+            <returns>The current position within the stream.</returns>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.NotSupportedException">The stream does not support seeking. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="P:bbv.Common.IO.StreamDecoratorStream.ReadTimeout">
+            <summary>
+            Gets or sets a value that determines how long the stream will attempt to read before timing out.
+            </summary>
+            <value></value>
+            <returns>A value that determines how long the stream will attempt to read before timing out.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="P:bbv.Common.IO.StreamDecoratorStream.WriteTimeout">
+            <summary>
+            Gets or sets a value that determines how long the stream will attempt to write before timing out.
+            </summary>
+            <value></value>
+            <returns>A value that determines how long the stream will attempt to write before timing out.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when no stream is assigned as decorated stream.
+            </exception>
+        </member>
+        <member name="T:bbv.Common.IO.StreamLoggerStream">
+            <summary>
+            Logs the data that is written to and read from a stream.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.StreamLoggerStream.bytesPerLine">
+            <summary>
+            The number of bytes that are written per line in the log.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.StreamLoggerStream.blockLength">
+            <summary>
+            The number of bytes that are written as a block. After a block a space is written.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.IO.StreamLoggerStream.log">
+            <summary>
+            The logger that is used for writing the log output.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.StreamLoggerStream.#ctor(System.IO.Stream,log4net.ILog,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.IO.StreamLoggerStream"/> class.
+            </summary>
+            <param name="stream">The stream that is logged.</param>
+            <param name="logger">The logger that is used for logging.</param>
+            <param name="bytesPerLine">The number of bytes that are written per line in the log.</param>
+            <param name="blockLength">The number of bytes that are written as a block. After a block a
+            space is written.</param>
+            <exception cref="T:System.ArgumentNullException">stream or logger is null.</exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamLoggerStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            When overridden in a derived class, reads a sequence of bytes from the current stream and advances the
+            position within the stream by the number of bytes read.
+            </summary>
+            <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte
+            array with the values between offset and (offset + count - 1) replaced by the bytes read from the current
+            source.</param>
+            <param name="offset">The zero-based byte offset in buffer at which to begin storing the data read from the
+            current stream.</param>
+            <param name="count">The maximum number of bytes to be read from the current stream.</param>
+            <returns>
+            The total number of bytes read into the buffer. This can be less than the number of bytes requested if that
+            many bytes are not currently available, or zero (0) if the end of the stream has been reached.
+            </returns>
+            <exception cref="T:System.ArgumentException">The sum of offset and count is larger than the buffer length.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+            <exception cref="T:System.NotSupportedException">The stream does not support reading.</exception>
+            <exception cref="T:System.ArgumentNullException">buffer is null. </exception>
+            <exception cref="T:System.IO.IOException">An I/O error occurs.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">offset or count is negative.</exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamLoggerStream.ReadByte">
+            <summary>
+            Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at 
+            the end of the stream.
+            </summary>
+            <returns>
+            The unsigned byte cast to an Int32, or -1 if at the end of the stream.
+            </returns>
+            <exception cref="T:System.NotSupportedException">The stream does not support reading. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. 
+            </exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamLoggerStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            When overridden in a derived class, writes a sequence of bytes to the current stream and advances the 
+            current position within this stream by the number of bytes written.
+            </summary>
+            <param name="buffer">An array of bytes. This method copies count bytes from buffer to the current stream.
+            </param>
+            <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current 
+            stream.</param>
+            <param name="count">The number of bytes to be written to the current stream.</param>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.NotSupportedException">The stream does not support writing. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. 
+            </exception>
+            <exception cref="T:System.ArgumentNullException">buffer is null. </exception>
+            <exception cref="T:System.ArgumentException">The sum of offset and count is greater than the buffer length.
+            </exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">offset or count is negative.</exception>
+        </member>
+        <member name="M:bbv.Common.IO.StreamLoggerStream.WriteByte(System.Byte)">
+            <summary>
+            Writes a byte to the current position in the stream and advances the position within the stream by one byte.
+            </summary>
+            <param name="value">The byte to write to the stream.</param>
+            <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+            <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
+            <exception cref="T:System.NotSupportedException">The stream does not support writing, or the stream is already 
+            closed. </exception>
+        </member>
+        <member name="T:bbv.Common.IO.StreamLoggerStream.LogHelper">
+            <summary>
+            Helper class for logging data with log4net
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.StreamLoggerStream.LogHelper.Debug(log4net.ILog,System.String,System.Byte[],System.Int64,System.Int64,System.Int32,System.Int32)">
+            <summary> 
+            Logs a byte array for debugging
+            </summary>
+            <param name="log">The logger to which the data is logged.</param>
+            <param name="msg">A message that is displayed before the data.</param>
+            <param name="buffer">The byte array that is logged</param>
+            <param name="offset">The index of the first byte that is logged.</param>
+            <param name="count">The number of bytes that are logged.</param>
+            <param name="lineLength">Number of bytes that are displayedPerLine</param>
+            <param name="blockLength">Defines how many bytes are in a block. A space is inserted after each block
+            </param>
+        </member>
+        <member name="M:bbv.Common.IO.StreamLoggerStream.LogHelper.LogBuffer(bbv.Common.IO.StreamLoggerStream.LogHelper.LogMethod,System.String,System.Byte[],System.Int64,System.Int64,System.Int32,System.Int32)">
+            <summary>
+            Logs a byte array
+            </summary>
+            <param name="logMethod">The method that is used for logging.</param>
+            <param name="msg">A message that is displayed before the data.</param>
+            <param name="buffer">The byte array that is logged</param>
+            <param name="offset">The index of the first byte that is logged.</param>
+            <param name="count">The number of bytes that are logged.</param>
+            <param name="lineLength">Number of bytes that are displayedPerLine</param>
+            <param name="blockLength">Defines how many bytes are in a block. A space is inserted after each block
+            </param>
+        </member>
+        <member name="T:bbv.Common.IO.StreamLoggerStream.LogHelper.LogMethod">
+            <summary>
+            This delegate is internally used to pass the log method of the <see cref="T:log4net.ILog"/> to the shared
+            <see cref="M:bbv.Common.IO.StreamLoggerStream.LogHelper.LogBuffer(bbv.Common.IO.StreamLoggerStream.LogHelper.LogMethod,System.String,System.Byte[],System.Int64,System.Int64,System.Int32,System.Int32)"/> method 
+            </summary>
+            <param name="message">The message that is logged.</param>
+        </member>
+        <member name="T:bbv.Common.IO.TextFileReader">
+            <summary>
+            Contains methods to read a file into a string or into a stream.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.TextFileReader.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.IO.TextFileReader"/> class.
+            </summary>
+            <param name="path">The path of the file.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/>is null</exception>
+        </member>
+        <member name="M:bbv.Common.IO.TextFileReader.GetString">
+            <summary>
+            Gets the content of the file as string.
+            </summary>
+            <returns>The file as a string.</returns>
+        </member>
+        <member name="M:bbv.Common.IO.TextFileReader.GetStream">
+            <summary>
+            Gets the stream of the file.
+            </summary>
+            <returns>The file as a stream.</returns>
+        </member>
+        <member name="T:bbv.Common.IO.TextFileWriter">
+            <summary>
+            Contains methods to write a text to the specified file.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.IO.TextFileWriter.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.IO.TextFileWriter"/> class.
+            </summary>
+            <param name="path">The path.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="path"/>is null</exception>
+        </member>
+        <member name="M:bbv.Common.IO.TextFileWriter.Write(System.String)">
+            <summary>
+            Writes the the to a specified file.
+            </summary>
+            <param name="content">The filecontent.</param>
+        </member>
+        <member name="M:bbv.Common.IO.TextFileWriter.Write(System.IO.Stream,System.Int32)">
+            <summary>
+            Writes the stream to the specified output.
+            </summary>
+            <param name="stream">The stream.</param>
+            <param name="bufferSize">The size of the buffer.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="stream"/>is null</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="bufferSize"/>If not greater than 0.</exception>
+        </member>
+        <member name="P:bbv.Common.IO.TextFileWriter.Encoding">
+            <summary>
+            Gets or sets the encoding.
+            </summary>
+            <value>The encoding.</value>
+        </member>
+    </members>
+</doc>

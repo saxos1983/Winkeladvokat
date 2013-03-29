@@ -1,0 +1,1524 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.Web</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.Web.UI.BaseHelper">
+            <summary>
+            Functionality shared by all helpers.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.UI.BaseHelper.ConvertValue``1(System.String)">
+            <summary>
+            Converts a string value to a specific type.
+            </summary>
+            <typeparam name="T">Conversion type. Can be enum, nullable, value or reference type.</typeparam>
+            <param name="value">String representation of the value.</param>
+            <returns>Converted type</returns>
+            <remarks>
+            For nullable types is null returned when the value is null or empty.
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.UI.BaseHelper.IsNullableType(System.Type)">
+            <summary>
+            Returns whether the type is nullable type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:bbv.Common.Web.Caching.CacheManager">
+            <summary>
+            Provides centralized access to the ASP.Net Cache.
+            </summary>
+            <remarks>
+            The <see cref="T:bbv.Common.Web.Caching.CacheManager"/> class provides centralized access to the ASP.NET Cache object.
+            <para>
+            The default caching behaviour is to cache the data for the duration of the page request 
+            (see <see cref="M:bbv.Common.Web.Caching.CacheManager.InitializePageRequestDurationCaching"/> and <see cref="M:bbv.Common.Web.Caching.CacheManager.DisposePageRequestDurationCaching"/>)
+            It is possible to set the duration (TimeSpan) of caching in the configuration file (see example). The key in the
+            configuration file has to match the main key under that the object is stored in the cache.
+            To destinguish between different cached objects of the same main key, a subkey can be defined. That means the main key
+            is used to define the duration of the caching and the combination of the main and subkey is used to identify the object in the cache.
+            You can use (<see cref="M:bbv.Common.Web.Caching.CacheManager.BuildSubCacheKey(System.Object[])"/> to build a subkey.	/// 
+            </para>
+            </remarks>
+            <example>
+            <appSettings>
+            	<!-- Caching Constants -->
+            	<add key="MyCacheKey" value="00:30:00"/>
+            </appSettings>
+            </example>
+        </member>
+        <member name="F:bbv.Common.Web.Caching.CacheManager.PAGE_REQUEST">
+            <summary>
+            	Cache key for the ASP.NET cache entry that is the dependency root for cache entris that are stored
+            	only for the duration of the page request.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.BuildSubCacheKey(System.Object[])">
+            <summary>
+            	Builds a subkey string from the list of subkey part values.
+            </summary>
+            <remarks>
+            	Use this method to build sub-cache-keys for caching data depending of search criterias.
+            </remarks>
+            <param name="subkeyparts">Objects representing the parts of the subkey.</param>
+            <returns>Subkey</returns>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.BuildSubCacheKeyPart(System.Text.StringBuilder,System.Object)">
+            <summary>
+            	Adds a part to the SubCacheKey.
+            </summary>
+            <param name="sb">StringBuilder used to generate the sub cache key.</param>
+            <param name="part">The part to add.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheItem(System.String,System.String,System.Object,System.Web.Caching.CacheItemRemovedCallback)">
+            <summary>
+            	Adds an object to the cache.
+            	The duration of caching is read from the configuration file.
+            </summary>
+            <param name="cacheItem">
+            	Object to cache.
+            </param>
+            <param name="key">
+            	First part of key to identify the object in the cache. 
+            	If this key matches with a key in the configuration file then the data is cached for the duration specified
+            	in the configuration file.
+            </param>
+            <param name="subkey">
+            	Second part of the key to identify the object in the cache.
+            </param>
+            <param name="onRemoveCallback">
+            	Method to be called when item is removed from the cache.
+            </param>
+            <remarks>
+            	The key is used to match the object to be cached with a key in the configuration file. The element of the configuration file contains
+            	data about how the object is to be cached. For example how data about modules has to be handled.
+            	The subkey is used to build a unique identifier for the object in the cache. For example the id of the module.
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheItem(System.String,System.String,System.Object)">
+            <summary>
+            	Adds an object to the cache.
+            	The duration of caching is read from the configuration file.
+            </summary>
+            <param name="cacheItem">
+            	Object to cache.
+            </param>
+            <param name="key">
+            	First part of key to identify the object in the cache. This key has to match with a key in the configuration file.
+            </param>
+            <param name="subkey">
+            	Second part of the key to identify the object in the cache.
+            </param>
+            <remarks>
+            	The key is used to match the object to be cached with a key in the configuration file. The element of the configuration file contains
+            	data about how the object is to be cached. For example how data about modules has to be handled.
+            	The subkey is used to build a unique identifier for the object in the cache. For example the id of the module.
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheItem(System.String,System.Object)">
+            <summary>
+            	Adds an object to the cache.
+            	The duration of caching is read from the configuration file.
+            </summary>
+            <param name="cacheItem">
+            	Object to cache.
+            </param>
+            <param name="key">
+            	Key to identify the object in the cache. This key has to match with a key
+            	in the configuration file.
+            </param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheItem(System.String,System.Object,System.Web.Caching.CacheItemRemovedCallback)">
+            <summary>
+            	Adds an object to the cache.
+            	The duration of caching is read from the configuration file.
+            </summary>
+            <param name="key">
+            	Key to identify the object in the cache. This key has to match with a key
+            	in the configuration file.
+            </param>
+            <param name="cacheItem">
+            	Object to cache.
+            </param>
+            <param name="onRemoveCallback">
+            	Method to be called when item is removed from the cache.
+            </param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.GetCacheItem``1(System.String)">
+            <summary>
+            	Returns an object from the cache (if contained, otherwise null).
+            </summary>
+            <param name="key">
+            	Key of the cached object.
+            </param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.GetCacheItem``1(System.String,System.String)">
+            <summary>
+            	Returns an object from the cache (if contained, otherwise null).
+            </summary>
+            <param name="key">Key of the cached object.</param>
+            <param name="subkey">Subkey of the cached object.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.InitializePageRequestDurationCaching">
+            <summary>
+            	Adds an entry to the cache that is used as a root for all cache dependancies for data that is cached for the
+            	duration of the page request.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.DisposePageRequestDurationCaching">
+            <summary>
+            	Removes all data cached for the duration of the page request from the cache.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.ClearCache">
+            <summary>
+            	Removes all items from the Cache.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.Remove(System.String)">
+            <summary>
+            Removes all items with a specific cache key from the cache.
+            </summary>
+            <param name="key">Key</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.Remove(System.String,System.String)">
+            <summary>
+            	Removes the the itme with the specified key and subkey from the cache.
+            </summary>
+            <param name="key">Key</param>
+            <param name="subkey">Subkey</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.ResetStatistics">
+            <summary>
+            	Resets the <see cref="P:bbv.Common.Web.Caching.CacheManager.Hits"/>, <see cref="P:bbv.Common.Web.Caching.CacheManager.Fails"/>, <see cref="P:bbv.Common.Web.Caching.CacheManager.Requests"/> and <see cref="P:bbv.Common.Web.Caching.CacheManager.Adds"/> lists.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.InitCacheConsistencyCheck">
+            <summary>
+            	Initializes the cache consistency checking.
+            </summary>
+            <remarks>
+            	A binary copy of all cached items is made and stored temporaly
+            	<seealso cref="M:bbv.Common.Web.Caching.CacheManager.UpdateConsistencyCheck(System.String,System.Object)"/>
+            	<seealso cref="M:bbv.Common.Web.Caching.CacheManager.CheckCacheConsistency"/>
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.UpdateConsistencyCheck(System.String,System.Object)">
+            <summary>
+            	Updates the stored data that is used for checking the consistency of the cache for the
+            	specified <paramref name="key"/>.
+            </summary>
+            <remarks>
+            	When an item is cached that was already present in the cache then this method gets called
+            	to update the data used to check the consistency of the cache.
+            	An update made through the Cache Manager is not a validation of the cache consistency.
+            </remarks>
+            <param name="key">Cache Key</param>
+            <param name="value">New value</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CheckCacheConsistency">
+            <summary>
+            	Checks whether the Cache was modified during the request.
+            </summary>
+            <remarks>
+            	<para>
+            		Checks whether the data stored in <see cref="M:bbv.Common.Web.Caching.CacheManager.InitCacheConsistencyCheck"/> is equal to the data
+            		now present in the cache.
+            	</para>
+            	<para>
+            		Note that new and deleted entries are allowed.
+            	</para>
+            	<seealso cref="M:bbv.Common.Web.Caching.CacheManager.InitCacheConsistencyCheck"/>
+            	<seealso cref="M:bbv.Common.Web.Caching.CacheManager.UpdateConsistencyCheck(System.String,System.Object)"/>
+            </remarks>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CacheManager.Configuration">
+            <summary>
+            Gets/sets the configuration for the CacheManager.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CacheManager.PageDurationCachingKey">
+            <summary>
+            	Key of the cache item to represent data cached for the page request. All data cached for the page request has a cache
+            	dependancy to the entry with this key.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CacheManager.Hits">
+            <summary>
+            	Keys of requested objects that were found in the cache.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CacheManager.Fails">
+            <summary>
+            	Keys of requested objects that were not found in the cache.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CacheManager.Requests">
+            <summary>
+            	Requested keys.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CacheManager.Adds">
+            <summary>
+            	Keys of objects added to the cache.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException">
+            <summary>
+            	Exception that is thrown when a cache inconsistency is found.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException.#ctor(System.String,System.Object,System.Object)">
+            <summary>
+            Initializes a new instance of the CacheInconsistentException class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException.#ctor(System.String,System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="key">The key.</param>
+            <param name="value">The value.</param>
+            <param name="expected">The expected.</param>
+            <param name="actual">The actual.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException.RenderObject(System.Object)">
+            <summary>
+            Renders the object.
+            </summary>
+            <param name="o">The o.</param>
+            <returns>HTML representation of the specified object.</returns>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException.RenderObject(System.Web.UI.HtmlTextWriter,System.Object)">
+            <summary>
+            Renders the object.
+            </summary>
+            <param name="w">The text writer the object is written to.</param>
+            <param name="o">The object to render.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException.RenderObject(System.Web.UI.HtmlTextWriter,System.Data.DataSet)">
+            <summary>
+            Renders the object.
+            </summary>
+            <param name="w">The text writer the object is written to.</param>
+            <param name="ds">The object to render.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException.RenderObject(System.Web.UI.HtmlTextWriter,System.Collections.ICollection)">
+            <summary>
+            Renders the object.
+            </summary>
+            <param name="w">The text writer the object is written to.</param>
+            <param name="c">The object to render.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CacheManager.CacheInconsistentException.RenderObject(System.Web.UI.HtmlTextWriter,System.Collections.DictionaryEntry)">
+            <summary>
+            Renders the object.
+            </summary>
+            <param name="w">The text writer the object is written to.</param>
+            <param name="e">The object to render.</param>
+        </member>
+        <member name="T:bbv.Common.Web.Caching.CachingSection">
+            <summary>
+            Caching Configuration Section used by CacheManager.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingSection.CheckConsistency">
+            <summary>
+            Gets or sets a value indicating whether the cache consistency has to be checked at the end of a request.
+            </summary>
+            <value><c>true</c> if [check consistency]; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingSection.LogPath">
+            <summary>
+            Gets or sets the log path. If a log path is specified then a log file about all caching actions is created.
+            </summary>
+            <value>The log path.</value>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingSection.Items">
+            <summary>
+            Gets the collection of all cache keys and caching durations.
+            </summary>
+            <value>The items.</value>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingSection.Item(System.String)">
+            <summary>
+            Shortcut to access duration of an element.
+            </summary>
+            <param name="key">Cache key.</param>
+            <returns>Caching duration.</returns>
+        </member>
+        <member name="T:bbv.Common.Web.Caching.CachingItemCollection">
+            <summary>
+            Collection of CachingElements.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CachingItemCollection.CreateNewElement">
+            <summary>
+            When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </summary>
+            <returns>
+            A new <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Web.Caching.CachingItemCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Gets the element key for a specified configuration element when overridden in a derived class.
+            </summary>
+            <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for.</param>
+            <returns>
+            An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </returns>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingItemCollection.CollectionType">
+            <summary>
+            Gets the type of the <see cref="T:System.Configuration.ConfigurationElementCollection"/>.
+            </summary>
+            <value></value>
+            <returns>The <see cref="T:System.Configuration.ConfigurationElementCollectionType"/> of this collection.</returns>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingItemCollection.ElementName">
+            <summary>
+            Gets the name used to identify this collection of elements in the configuration file when overridden in a derived class.
+            </summary>
+            <value><code>"CachingItem"</code></value>
+            <returns>The name of the collection; otherwise, an empty string. The default is an empty string.</returns>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingItemCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the <see cref="T:bbv.Common.Web.Caching.CachingItem"/> at the specified index.
+            </summary>
+            <value>A CachingItem.</value>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingItemCollection.Item(System.String)">
+            <summary>
+            Gets the <see cref="T:bbv.Common.Web.Caching.CachingItem"/> with the specified key.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:bbv.Common.Web.Caching.CachingItem">
+            <summary>
+            A Caching Element used by CacheManager.
+            This element defines the duration of caching.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingItem.Key">
+            <summary>
+            Gets or sets the caching key.
+            </summary>
+            <value>The caching key.</value>
+        </member>
+        <member name="P:bbv.Common.Web.Caching.CachingItem.Duration">
+            <summary>
+            Gets or sets the caching duration.
+            </summary>
+            <value>The caching duration.</value>
+        </member>
+        <member name="T:bbv.Common.Web.UI.ControlHelper">
+            <summary>
+            Provides functionality to ease modification of <see cref="T:System.Web.UI.Control"/>s.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.UI.ControlHelper.SetVisible(System.Boolean,System.Web.UI.Control[])">
+            <summary>
+            Sets the visibility of multiple controls at once to reduce coding.
+            </summary>
+            <param name="visible">Whether the control is set visible.</param>
+            <param name="controls">The controls.</param>
+        </member>
+        <member name="T:bbv.Common.Web.UI.DropDownListHelper">
+            <summary>
+            Helper class for handling <see cref="T:System.Web.UI.WebControls.DropDownList"/>s.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.IDependencyHost">
+            <summary>
+            Classes that want to be host dependencies that are created by the <see cref="P:bbv.Common.Web.ObjectFactory.IDependencyHost.ObjectFactory"/> have to implement this interface.
+            </summary>
+            <remarks>
+            A class that implements this interface can access dependencies in the following way:
+            <code>
+            private IMyDependency MyDependency
+            {
+                get { return this.ObjectFactory.Get&lt;IMyDependency&gt;(); }
+            }
+            </code>
+            </remarks>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.IDependencyHost.ObjectFactory">
+            <summary>
+            The object factory instance.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.Bind(System.Web.UI.WebControls.DropDownList,System.Data.DataTable,System.Data.DataColumn,System.Data.DataColumn)">
+            <summary>
+            Binds a <see cref="T:System.Data.DataTable"/> to a <see cref="T:System.Web.UI.WebControls.DropDownList"/>.
+            </summary>
+            <param name="ddl"><see cref="T:System.Web.UI.WebControls.DropDownList"/> to bind.</param>
+            <param name="table"><see cref="T:System.Data.DataTable"/> that is used as data source.</param>
+            <param name="text">Column that contains the values that are displayed.</param>
+            <param name="value">Column that contains the values.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.Bind(System.Web.UI.WebControls.DropDownList,System.Data.DataRow[],System.Data.DataColumn,System.Data.DataColumn)">
+            <summary>
+            Binds <see cref="T:System.Data.DataRow"/>s to a <see cref="T:System.Web.UI.WebControls.DropDownList"/>.
+            </summary>
+            <param name="ddl"><see cref="T:System.Web.UI.WebControls.DropDownList"/> to bind</param>
+            <param name="rows">Rows that are used as data source.</param>
+            <param name="text">Column that contains the values that are displayed.</param>
+            <param name="value">Column that contains the values.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.Bind(System.Web.UI.WebControls.DropDownList,System.Data.DataRow[],System.Data.DataColumn,System.Resources.ResourceManager,System.String)">
+            <summary>
+            Binds <see cref="T:System.Data.DataRow"/>s to a <see cref="T:System.Web.UI.WebControls.DropDownList"/>.
+            </summary>
+            <param name="ddl"><see cref="T:System.Web.UI.WebControls.DropDownList"/> to bind</param>
+            <param name="rows">Rows that are used as data source.</param>
+            <param name="value">Column that contains the values.</param>
+            <param name="resourceManager">The ResourceManager that is ued to translate the values</param>
+            <param name="resourcePrefix">The prefix of the keys in the resource. The keys in the resource have to have the format "[resourcePrefix][value]".</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.Bind(System.Web.UI.WebControls.DropDownList,System.Collections.IDictionary)">
+            <summary>
+            Binds a <see cref="T:System.Collections.IDictionary"/> to a <see cref="T:System.Web.UI.WebControls.DropDownList"/>.
+            The dictionary-key is used as value.
+            The dictionary-value is used as display value.
+            </summary>
+            <param name="ddl"><see cref="T:System.Web.UI.WebControls.DropDownList"/> to bind</param>
+            <param name="dict">The dictionary that is used as data source.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.Bind(System.Web.UI.WebControls.DropDownList,System.Collections.ICollection)">
+            <summary>
+            Binds a <see cref="T:System.Collections.ICollection"/> to a <see cref="T:System.Web.UI.WebControls.DropDownList"/>.
+            </summary>
+            <param name="ddl"><see cref="T:System.Web.UI.WebControls.DropDownList"/> to bind</param>
+            <param name="collection">The collection that is used as data source.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.Bind``1(System.Web.UI.WebControls.DropDownList,System.Resources.ResourceManager)">
+            <summary>
+            Binds an enum to a DropDownList.
+            The text values are localized by a ResourceManager. The pattern for a key in the resource is EnumTypeName.Value, e.g. MyEnum.MyValue.
+            </summary>
+            <typeparam name="EnumType">The enum that is binded.</typeparam>
+            <param name="ddl"><see cref="T:System.Web.UI.WebControls.DropDownList"/> to bind</param>
+            <param name="resourceManager">The ResourceManager that is used to translate the values.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.InsertItem(System.Web.UI.WebControls.DropDownList,System.Int32,System.String,System.String)">
+            <summary>
+            Inserts an element into the list of items of a <see cref="T:System.Web.UI.WebControls.DropDownList"/>.
+            </summary>
+            <param name="ddl"><see cref="T:System.Web.UI.WebControls.DropDownList"/></param>
+            <param name="index">Index to insert the element.</param>
+            <param name="text">Text that is displayed.</param>
+            <param name="value">Value of the element.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.SetSelectedValue(System.Web.UI.WebControls.DropDownList,System.String,System.Boolean)">
+            <summary>
+            Sets the selected value of a <see cref="T:System.Web.UI.WebControls.DropDownList"/> if <paramref name="setValue"/> is equal to true and the value is present
+            in the list of choosable values.
+            </summary>
+            <remarks>
+            If the value is not contained in the list of choosable values then no selection is performed.
+            <para>
+            The <paramref name="setValue"/> is present to reduce the number of if statements in the code.
+            </para>
+            </remarks>
+            <param name="ddl">		Dropdownlist						</param>
+            <param name="value">	The value to select.				</param>
+            <param name="setValue">	Whether the value should be set.	</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.SetSelectedValue(System.Web.UI.WebControls.DropDownList,System.String)">
+            <summary>
+            Sets the selected value of a <see cref="T:System.Web.UI.WebControls.DropDownList"/> if present.
+            </summary>
+            <remarks>
+            If the value is not contained in the list of choosable values then no selection is performed.
+            </remarks>
+            <param name="ddl">		Dropdownlist						</param>
+            <param name="value">	The value to select.				</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.SetSelectedValue(System.Web.UI.WebControls.DropDownList,System.Object)">
+            <summary>
+            Sets the selected value of a <see cref="T:System.Web.UI.WebControls.DropDownList"/> if present.
+            </summary>
+            <remarks>
+            If the value is not contained in the list of choosable values then no selection is performed.
+            </remarks>
+            <param name="ddl">		Dropdownlist						</param>
+            <param name="value">	The value to select.				</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.DropDownListHelper.GetSelectedValue``1(System.Web.UI.WebControls.DropDownList)">
+            <summary>
+            Returns the selected value of a DropDownList as a value of a specific type.
+            </summary>
+            <typeparam name="T">Typ to return. Can be an enum, nullable, value or reference type.</typeparam>
+            <param name="ddl">DropDownList</param>
+            <returns>Selected value</returns>
+        </member>
+        <member name="P:bbv.Common.Web.UI.DropDownListHelper.ExceptionFactory">
+            <summary>
+            Gets the exception factory.
+            </summary>
+            <value>The exception factory.</value>
+        </member>
+        <member name="P:bbv.Common.Web.UI.DropDownListHelper.ObjectFactory">
+            <summary>
+            The object factory instance.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:bbv.Common.Web.Exceptions.UI.ExceptionPane">
+            <summary>
+            The <see cref="T:bbv.Common.Web.Exceptions.UI.ExceptionPane"/> is a <see cref="T:System.Web.UI.WebControls.Panel"/> that can be used to display
+            the exceptins that were stored in the <see cref="P:bbv.Common.Web.Exceptions.UI.ExceptionPane.ExceptionRepository"/>.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.UI.ExceptionPane.OnPreRender(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Web.UI.Control.PreRender"/> event.
+            
+            Sets the viibility of the control depending on whether exceptions are present.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> object that contains the event data.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.UI.ExceptionPane.BuildControls(System.Collections.Generic.List{System.Exception},System.Collections.Generic.Dictionary{System.String,System.Boolean})">
+            <summary>
+            Builds the controls that display the exceptions.
+            </summary>
+            <param name="exceptions">Exceptions for that controls are rendered.</param>
+            <param name="cache">The cache holds all already display captions and messages.</param>
+        </member>
+        <member name="P:bbv.Common.Web.Exceptions.UI.ExceptionPane.ObjectFactoryPage">
+            <summary>
+            Gets the object factory page this <see cref="T:bbv.Common.Web.Exceptions.UI.ExceptionPane"/> is embedded.
+            </summary>
+            <value>The object factory page.</value>
+        </member>
+        <member name="P:bbv.Common.Web.Exceptions.UI.ExceptionPane.ObjectFactory">
+            <summary>
+            Gets the object factory of the <see cref="P:bbv.Common.Web.Exceptions.UI.ExceptionPane.ObjectFactoryPage"/> this control is embedded.
+            </summary>
+            <value>The object factory.</value>
+        </member>
+        <member name="P:bbv.Common.Web.Exceptions.UI.ExceptionPane.ExceptionRepository">
+            <summary>
+            Gets the exception repository.
+            </summary>
+            <value>The exception repository.</value>
+        </member>
+        <member name="T:bbv.Common.Web.Exceptions.DisplayContainerException">
+            <summary>
+            Exception, that is a container for <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/>s.
+            </summary>
+            <remarks>
+            The DisplayContainerException can be used to gather several <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/>s and handle them as one single exception.
+            </remarks>
+        </member>
+        <member name="T:bbv.Common.Web.Exceptions.DisplayException">
+            <summary>
+            A DisplayException is an exception with a caption, message and a <see cref="T:bbv.Common.Web.Exceptions.ExceptionLevel"/>.
+            </summary>
+            <remarks>
+            DisplayExceptions can be used to present hints, warnings and errors to the user.
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/> class.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/> class with a message.
+            </summary>
+            <param name="message">The message that describes the exception.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayException.#ctor(System.String,bbv.Common.Web.Exceptions.ExceptionLevel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/> class with a message and level.
+            </summary>
+            <param name="message">The message that describes the exception.</param>
+            <param name="level">The level of the exception</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/> class with a message and an inner exception.
+            </summary>
+            <param name="message">The message that describes the exception.</param>
+            <param name="innerException">The exception that is the cause of the current exception.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/> class with a caption and a message.
+            </summary>
+            <param name="caption">The caption that describes the exception.</param>
+            <param name="message">The message that describes the exception.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayException.#ctor(System.String,System.String,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/> class with a caption and a message.
+            </summary>
+            <param name="caption">The caption that describes the exception.</param>
+            <param name="message">The message that describes the exception as a format string (as in string.Format).</param>
+            <param name="args">Array of objects used in message (as in string.Format).</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayException.#ctor(System.String,System.String,bbv.Common.Web.Exceptions.ExceptionLevel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/> class with a caption, message and level.
+            </summary>
+            <param name="caption">The caption that describes the exception.</param>
+            <param name="message">The message that describes the exception as a format string (as in string.Format).</param>
+            <param name="level">The level of the exception</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayException.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/> class with a caption, message and an inner exception.
+            </summary>
+            <param name="caption">The caption that describes the exception.</param>
+            <param name="message">The message that describes the exception as a format string (as in string.Format).</param>
+            <param name="innerException">The exception that is the cause of the current exception.</param>
+        </member>
+        <member name="P:bbv.Common.Web.Exceptions.DisplayException.Caption">
+            <summary>
+            Gets/sets the caption of the exception.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Exceptions.DisplayException.Level">
+            <summary>
+            Gets/sets the level of the exception.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayContainerException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayContainerException"/> class.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.DisplayContainerException.#ctor(System.Exception[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.Exceptions.DisplayContainerException"/> class with a collection of exceptions.
+            </summary>
+            <param name="exceptions">This exceptions are added to the collection.</param>
+        </member>
+        <member name="P:bbv.Common.Web.Exceptions.DisplayContainerException.Exceptions">
+            <summary>
+            Gets the collection of contained exceptions.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.Exceptions.DisplayContainerException.Level">
+            <summary>
+            Gets the level of the exception (hint, warning, error). 
+            The level is equal to the highest level that is present in the contained exceptions.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Web.Exceptions.ExceptionLevel">
+            <summary>
+            The level of a <see cref="T:bbv.Common.Web.Exceptions.DisplayException"/>.
+            </summary>
+            <remarks>
+            Have to be sorted from least to most severe level.
+            </remarks>
+        </member>
+        <member name="F:bbv.Common.Web.Exceptions.ExceptionLevel.Hint">
+            <summary>Represents just an information.</summary>
+        </member>
+        <member name="F:bbv.Common.Web.Exceptions.ExceptionLevel.Warning">
+            <summary>Represents a warning, meaning that the action executed but there are warnings.</summary>
+        </member>
+        <member name="F:bbv.Common.Web.Exceptions.ExceptionLevel.Error">
+            <summary>Represents an error, meaning that the action could not be performed.</summary>
+        </member>
+        <member name="T:bbv.Common.Web.Exceptions.ExceptionComparer">
+            <summary>
+            Comparer für Exceptions (DisplayExceptions). Exceptions will be sorted by their level.
+            </summary>
+            <remarks>
+            Exceptions are sorted in the following order
+            	<list type="number">
+            		<item>Exception</item>
+            		<item>Error</item>
+            		<item>Warning</item>
+            		<item>Hint</item>
+            	</list>
+            </remarks>
+        </member>
+        <member name="T:bbv.Common.Web.Exceptions.ExceptionFactory">
+            <summary>
+            Default implementation of an ExceptionFactory.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Web.Exceptions.IExceptionFactory">
+            <summary>
+            Interface for an exception factory.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfArgumentNull(System.Object)">
+            <summary>
+            Throws the argument exception if argument null.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfArgumentNull(System.Object,System.String)">
+            <summary>
+            Throws the argument exception if argument null.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfArgumentNull(System.Object,System.String,System.Exception)">
+            <summary>
+            Throws the argument exception if argument null.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfArgumentNull(System.Object,System.String,System.String,System.Exception)">
+            <summary>
+            Throws the argument exception if argument null.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="message">The message.</param>
+            <param name="paramName">Name of the param.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfFalse(System.Boolean)">
+            <summary>
+            Throws the argument exception if false.
+            </summary>
+            <param name="value">if set to <c>true</c> [value].</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfFalse(System.Boolean,System.String)">
+            <summary>
+            Throws the argument exception if false.
+            </summary>
+            <param name="value">if set to <c>true</c> [value].</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfFalse(System.Boolean,System.String,System.Exception)">
+            <summary>
+            Throws the argument exception if false.
+            </summary>
+            <param name="value">if set to <c>true</c> [value].</param>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfFalse(System.Boolean,System.String,System.String,System.Exception)">
+            <summary>
+            Throws the argument exception if false.
+            </summary>
+            <param name="value">if set to <c>true</c> [value].</param>
+            <param name="message">The message.</param>
+            <param name="paramName">Name of the param.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowArgumentExceptionIfNotInt(System.String,System.String)">
+            <summary>
+            Throws the argument exception if the specified string value can not be parsed into an int.
+            </summary>
+            <param name="intValue">The int value.</param>
+            <param name="paramname">The paramname.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowInvalidOperationExceptionIfNull(System.Object,System.String)">
+            <summary>
+            Throws the invalid operation exception if null.
+            </summary>
+            <param name="value">The value.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.ThrowInvalidOperationExceptionIf(System.Boolean,System.String)">
+            <summary>
+            Throws the invalid operation exception if.
+            </summary>
+            <param name="condition">if set to <c>true</c> [condition].</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.GetDisplayException(System.String,System.String,System.Object[])">
+            <summary>
+            Gets the display exception.
+            </summary>
+            <param name="caption">The caption.</param>
+            <param name="message">The message.</param>
+            <param name="args">The args.</param>
+            <returns></returns>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.IExceptionFactory.GetDisplayException(bbv.Common.Web.Exceptions.ExceptionLevel,System.String,System.String,System.Object[])">
+            <summary>
+            Gets the display exception.
+            </summary>
+            <param name="level">The level.</param>
+            <param name="caption">The caption.</param>
+            <param name="message">The message.</param>
+            <param name="args">The args.</param>
+            <returns></returns>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.ExceptionFactory.GetDisplayException(System.String,System.String,System.Object[])">
+            <summary>
+            Gets a display exception.
+            </summary>
+            <param name="caption">The caption.</param>
+            <param name="message">The message.</param>
+            <param name="args">The args.</param>
+            <returns></returns>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.ExceptionFactory.GetDisplayException(bbv.Common.Web.Exceptions.ExceptionLevel,System.String,System.String,System.Object[])">
+            <summary>
+            Gets a display exception.
+            </summary>
+            <param name="level">The level.</param>
+            <param name="caption">The caption.</param>
+            <param name="message">The message.</param>
+            <param name="args">The args.</param>
+            <returns></returns>
+        </member>
+        <member name="T:bbv.Common.Web.Exceptions.ExceptionRepository">
+            <summary>
+            	The exception repository is used to store exceptions that has taken place during 
+            	a process. At the end of that process the accumulated exceptions can be gathered at once
+            	and processed.
+            </summary>
+            <remarks>
+            	Normally the exception repository is only used for collecting minor exceptions such as hints and warnings, i.e
+            	not exceptions that are system critical.
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.ExceptionRepository.AddException(System.Exception)">
+            <summary>
+            Adds the exception to the repository.
+            </summary>
+            <param name="e">The e.</param>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.ExceptionRepository.Clear">
+            <summary>
+            Clears all exceptions from the repository.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.Exceptions.ExceptionRepository.GetSortedExceptions">
+            <summary>
+            Gets a sorted list of all exceptions in the repository.
+            </summary>
+            <returns>Sorted list of exceptions.</returns>
+        </member>
+        <member name="T:bbv.Common.Web.UI.GridViewHelper">
+            <summary>
+            Provides functionality to ease modification of <see cref="T:System.Web.UI.WebControls.GridView"/>s.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.DependencyHost">
+            <summary>
+            Default implementation of the <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> interface that can be used as a bas class for
+            all dependency hosts that do not already have a base class.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.DependencyHost.ObjectFactory">
+            <summary>
+            The object factory instance.
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:bbv.Common.Web.UI.GridViewHelper.SelectRow(System.Web.UI.WebControls.GridView,System.Object)">
+            <summary>
+            Selects the row with the specified key. If no row with this key is present then 
+            nothing happens.
+            </summary>
+            <param name="gridview">The gridview.</param>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
+        <member name="T:bbv.Common.Web.UI.GridViewSortExtender">
+            <summary>
+            The GridViewSortExtender is used to add a sort indicator to a <see cref="T:System.Web.UI.WebControls.GridView"/>.
+            The sort indicator is an image that is shown in the sort column an displays the sort direction.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.UI.GridViewSortExtender.OnPreRender(System.EventArgs)">
+            <summary>
+            Adds an event handler to the DataBound event of the extended GridView.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.GridViewSortExtender.GetSortField(System.Web.UI.WebControls.GridView)">
+            <summary>
+            Returns the index of the sort-column.
+            </summary>
+            <param name="extendee"></param>
+            <returns></returns>
+        </member>
+        <member name="P:bbv.Common.Web.UI.GridViewSortExtender.AscendingImageUrl">
+            <summary>
+            Image that is displayed when SortDirection is ascending.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.UI.GridViewSortExtender.DescendingImageUrl">
+            <summary>
+            Image that is displayed when SortDirection is descending.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.UI.GridViewSortExtender.ExtendeeID">
+            <summary>
+            The GridView that is extended.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Web.UI.GridViewSortExtenderDesigner">
+            <summary>
+            Designer for <see cref="T:bbv.Common.Web.UI.GridViewSortExtender"/>.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.UI.GridViewSortExtenderDesigner.GetDesignTimeHtml">
+            <summary>
+            Retrieves the HTML markup that is used to represent the control at design time.
+            </summary>
+            <returns>
+            The HTML markup used to represent the control at design time.
+            </returns>
+        </member>
+        <member name="T:bbv.Common.Web.UI.GridViewIDConverter">
+            <summary>
+            This class is used by the designer to filter the controls listed in the dropdown list in the property window.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.UI.GridViewIDConverter.FilterControl(System.Web.UI.Control)">
+            <summary>
+            Returns a value indicating whether the control ID of the specified control is added to the <see cref="T:System.ComponentModel.TypeConverter.StandardValuesCollection"/> that is returned by the <see cref="M:System.Web.UI.WebControls.ControlIDConverter.GetStandardValues(System.ComponentModel.ITypeDescriptorContext)"/> method.
+            </summary>
+            <param name="control">The control instance to test for inclusion in the <see cref="T:System.ComponentModel.TypeConverter.StandardValuesCollection"/>.</param>
+            <returns>true in all cases.</returns>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactorySection">
+            <summary>
+            Caching Section used by ObjectFactory.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactorySection.Items">
+            <summary>
+            Gets the items.
+            </summary>
+            <value>The items.</value>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactorySection.Item(System.String)">
+            <summary>
+            Shortcut to access duration of an element.
+            </summary>
+            <value></value>
+            <returns></returns>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItemCollection">
+            <summary>
+            Collection of ObjectFactoryItems.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItemCollection.CreateNewElement">
+            <summary>
+            When overridden in a derived class, creates a new <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </summary>
+            <returns>
+            A new <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItemCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Gets the element key for a specified configuration element when overridden in a derived class.
+            </summary>
+            <param name="element">The <see cref="T:System.Configuration.ConfigurationElement"/> to return the key for.</param>
+            <returns>
+            An <see cref="T:System.Object"/> that acts as the key for the specified <see cref="T:System.Configuration.ConfigurationElement"/>.
+            </returns>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItemCollection.CollectionType">
+            <summary>
+            Gets the type of the <see cref="T:System.Configuration.ConfigurationElementCollection"/>.
+            </summary>
+            <value></value>
+            <returns>The <see cref="T:System.Configuration.ConfigurationElementCollectionType"/> of this collection.</returns>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItemCollection.ElementName">
+            <summary>
+            Gets the name used to identify this collection of elements in the configuration file when overridden in a derived class.
+            </summary>
+            <value></value>
+            <returns>The name of the collection.</returns>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItemCollection.Item(System.Int32)">
+            <summary>
+            Gets or sets the <see cref="T:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItem"/> at the specified index.
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItemCollection.Item(System.String)">
+            <summary>
+            Gets the <see cref="T:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItem"/> with the specified key type.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItem">
+            <summary>
+            A ObjectFactoryItem used by Object Facotry.
+            This element defines the type that is instantiated for a found type.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItem.KeyType">
+            <summary>
+            Gets or sets the type of the dependency.
+            </summary>
+            <value>The type of the dependency.</value>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItem.InstantiationType">
+            <summary>
+            Gets or sets the type of the instantiation (the type the requested type is mapped to).
+            </summary>
+            <value>The type of the instantiation.</value>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.Configuration.ObjectFactoryItem.Context">
+            <summary>
+            Gets or sets the context (Scope) the dependency is hold.
+            </summary>
+            <value>The context.</value>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.IObjectFactory">
+            <summary>
+            Provides access to "singleton" dependencies.
+            </summary>
+            <remarks>
+            The <see cref="T:bbv.Common.Web.ObjectFactory.IObjectFactory"/> is the central part of an application built with
+            bbv.Common.Web. All dependencies that a class has (all classes it references) that should 
+            exist only once per scope (see below) should be
+            accessed through the <see cref="T:bbv.Common.Web.ObjectFactory.IObjectFactory"/>, which will create and store them in a 
+            configurable scope container (request, session, cache, application).
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.IObjectFactory.Get``1">
+            <summary>
+            Returns the instance (dependency) for the requested type.
+            </summary>
+            <remarks>
+            <para>
+            If a mapping for the requested type is defined in the configuration then an instance for the target type is searched instead of
+            the requested type.
+            </para>
+            <para>
+            If no instance for the requested type (or mapping target type) is present a new instance is created. Therefore the created type
+            has to have a parameterless constructor.
+            </para>
+            <para>
+            If the created instance implements <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> then this ObjectFactory is set to the instance to maintain context.
+            </para>
+            </remarks>
+            <typeparam name="T">The requested type.</typeparam>
+            <returns>The dependency of type <typeparamref name="T"/>.</returns>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.IObjectFactory.Get``1(bbv.Common.Web.ObjectFactory.Scope)">
+            <summary>
+            Returns the instance for the requested type.
+            </summary>
+            <remarks>
+            <para>
+            If a mapping for the requested type is defined in the configuration then an instance for the target type is searched instead of
+            the requested type.
+            </para>
+            <para>
+            If no instance for the requested type (or mapping target type) is present a new instance is created. Therefore the created type
+            has to have a parameterless constructor.
+            </para>
+            <para>
+            If the created instance implements <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> then this ObjectFactory is set to the instance to maintain context.
+            </para>
+            </remarks>
+            <typeparam name="T">The requested type.</typeparam>
+            <param name="context">The context that is used to store/retrieve the instance.</param>
+            <returns></returns>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.IObjectFactory.Get``1(System.Boolean)">
+            <summary>
+            Returns the instance for the requested type.
+            </summary>
+            <typeparam name="T">The requested type.</typeparam>
+            <param name="createIfMissing">if set to <c>true</c> [create if missing].</param>
+            <returns></returns>
+            <remarks>
+            	<para>
+            If a mapping for the requested type is defined in the configuration then an instance for the target type is searched instead of
+            the requested type.
+            </para>
+            	<para>
+            If no instance for the requested type (or mapping target type) is present a new instance is created. Therefore the created type
+            has to have a parameterless constructor.
+            </para>
+            	<para>
+            If the created instance implements <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> then this ObjectFactory is set to the instance to maintain context.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.IObjectFactory.Get``1(bbv.Common.Web.ObjectFactory.Scope,System.Boolean)">
+            <summary>
+            Returns the instance for the requested type.
+            </summary>
+            <typeparam name="T">The requested type.</typeparam>
+            <param name="context">The context that is used to store/retrieve the instance.</param>
+            <param name="createIfMissing">True if the dependency should be created if it does not exist yet.</param>
+            <returns></returns>
+            <remarks>
+            	<para>
+            If a mapping for the requested type is defined in the configuration then an instance for the target type is searched instead of
+            the requested type.
+            </para>
+            	<para>
+            If no instance for the requested type (or mapping target type) is present a new instance is created. Therefore the created type
+            has to have a parameterless constructor.
+            </para>
+            	<para>
+            If the created instance implements <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> then this ObjectFactory is set to the instance to maintain context.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.IObjectFactory.Set(System.Object,bbv.Common.Web.ObjectFactory.Scope)">
+            <summary>
+            Sets a dependency instance to the object vault specified by <paramref name="context"/>.
+            </summary>
+            <remarks>
+            Use this method to set dependencies that can not be created without context.
+            </remarks>
+            <param name="dependency">The dependency</param>
+            <param name="context">In which context this dependency is placed.</param>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.IObjectFactory.Remove``1">
+            <summary>
+            Removes the dependency of type <typeparamref name="T"/> from all scopes.
+            </summary>
+            <typeparam name="T">Type of the dependency to remove.</typeparam>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.ObjectFactory">
+            <summary>
+            Provides access to "singleton" dependencies.
+            </summary>
+            <remarks>
+            The <see cref="T:bbv.Common.Web.ObjectFactory.ObjectFactory"/> is the central part of an application built with
+            bbv.Common.Web. All dependencies that a class has (all classes it references) that should 
+            exist only once per scope (see below) should be
+            accessed through the <see cref="T:bbv.Common.Web.ObjectFactory.ObjectFactory"/>, which will create and store them in a 
+            configurable scope container (request, session, cache, application).
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Web.ObjectFactory.ObjectFactory"/> class.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Web.ObjectFactory.ObjectFactory.objects">
+            <summary>
+            Collection of all singletons managed by this instance of the ObjectFactory.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.GetObject(bbv.Common.Web.ObjectFactory.Scope,System.Type)">
+            <summary>
+            Searches the objects vaults for an instance of a dependency type.
+            Returns null if no instance of this type is present in any object vault.
+            </summary>
+            <param name="context">The scope from which the depency is taken. 
+            If <see cref="F:bbv.Common.Web.ObjectFactory.Scope.Undefined"/> is specified then all object vaults are searched..</param>
+            <param name="dependencyType">The type the instance is searched for.</param>
+            <returns>An existing instance or null.</returns>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.AddDependency(System.Type,System.Object,bbv.Common.Web.ObjectFactory.Scope)">
+            <summary>
+            Adds a dependency to the object vault specified by <paramref name="context"/>.
+            </summary>
+            <param name="dependencyType">The type of the dependency (must equal dependency.GetType())</param>
+            <param name="dependency">The dependency</param>
+            <param name="context">To which context the instance is added.</param>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.Get``1">
+            <summary>
+            Returns the instance for the requested type.
+            </summary>
+            <typeparam name="T">The requested type.</typeparam>
+            <returns>
+            The dependency of type <typeparamref name="T"/>.
+            </returns>
+            <remarks>
+            	<para>
+            If a mapping for the requested type is defined in the configuration then an instance for the target type is searched instead of
+            the requested type.
+            </para>
+            	<para>
+            If no instance for the requested type (or mapping target type) is present a new instance is created. Therefore the created type
+            has to have a parameterless constructor.
+            </para>
+            	<para>
+            If the created instance implements <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> then this ObjectFactory is set to the instance to maintain context.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.Get``1(bbv.Common.Web.ObjectFactory.Scope)">
+            <summary>
+            Returns the instance for the requested type.
+            </summary>
+            <remarks>
+            <para>
+            If a mapping for the requested type is defined in the configuration then an instance for the target type is searched instead of
+            the requested type.
+            </para>
+            <para>
+            If no instance for the requested type (or mapping target type) is present a new instance is created. Therefore the created type
+            has to have a parameterless constructor.
+            </para>
+            <para>
+            If the created instance implements <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> then this ObjectFactory is set to the instance to maintain context.
+            </para>
+            </remarks>
+            <typeparam name="T">The requested type.</typeparam>
+            <param name="context">The context that is used to store/retrieve the instance.</param>
+            <returns></returns>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.Get``1(System.Boolean)">
+            <summary>
+            Returns the instance for the requested type.
+            </summary>
+            <typeparam name="T">The requested type.</typeparam>
+            <param name="createIfMissing">if set to <c>true</c> [create if missing].</param>
+            <returns></returns>
+            <remarks>
+            	<para>
+            If a mapping for the requested type is defined in the configuration then an instance for the target type is searched instead of
+            the requested type.
+            </para>
+            	<para>
+            If no instance for the requested type (or mapping target type) is present a new instance is created. Therefore the created type
+            has to have a parameterless constructor.
+            </para>
+            	<para>
+            If the created instance implements <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> then this ObjectFactory is set to the instance to maintain context.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.Get``1(bbv.Common.Web.ObjectFactory.Scope,System.Boolean)">
+            <summary>
+            Returns the instance for the requested type.
+            </summary>
+            <typeparam name="T">The requested type.</typeparam>
+            <param name="context">The context that is used to store/retrieve the instance.</param>
+            <param name="createIfMissing">True if the dependency should be created if it does not exist yet.</param>
+            <returns></returns>
+            <remarks>
+            	<para>
+            If a mapping for the requested type is defined in the configuration then an instance for the target type is searched instead of
+            the requested type.
+            </para>
+            	<para>
+            If no instance for the requested type (or mapping target type) is present a new instance is created. Therefore the created type
+            has to have a parameterless constructor.
+            </para>
+            	<para>
+            If the created instance implements <see cref="T:bbv.Common.Web.ObjectFactory.IDependencyHost"/> then this ObjectFactory is set to the instance to maintain context.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.Set(System.Object,bbv.Common.Web.ObjectFactory.Scope)">
+            <summary>
+            Sets a dependency instance to the object vault specified by <paramref name="context"/>.
+            </summary>
+            <remarks>
+            Use this method to set dependencies that can not be created without context.
+            </remarks>
+            <param name="dependency">The dependency</param>
+            <param name="context">In which context this dependency is placed.</param>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.Remove``1">
+            <summary>
+            Removes the dependency of type <typeparamref name="T"/> from all scopes.
+            </summary>
+            <typeparam name="T">Type of the dependency to remove.</typeparam>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.ObjectFactory.SetGlobalDependency(System.Object,bbv.Common.Web.ObjectFactory.Scope)">
+            <summary>
+            Sets a global dependency instance to the object vault specified by <paramref name="context"/>.
+            </summary>
+            <remarks>
+            Use this method instead of <see cref="M:bbv.Common.Web.ObjectFactory.ObjectFactory.Set(System.Object,bbv.Common.Web.ObjectFactory.Scope)"/> if you want to add a dependency but you do not have access
+            to an ObjectFactory (e.g. in global methods).
+            </remarks>
+            <param name="dependency">The dependency</param>
+            <param name="context">In which context this dependency is placed. (<see cref="F:bbv.Common.Web.ObjectFactory.Scope.Page"/> is not valid here)</param>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.ObjectFactory.Configuration">
+            <summary>
+            Gets/sets the configuration for the ObjectFactory.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.ObjectFactory.ObjectVault">
+            <summary>
+            Dictionary that maps types to instances.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.Scope">
+            <summary>
+            The scope defines where an object is stored (Session, Cache, Application state or just for the duration of the request).
+            </summary>
+        </member>
+        <member name="F:bbv.Common.Web.ObjectFactory.Scope.Page">
+            <summary>The object is stored within the page and will only be available during the current request.</summary>
+        </member>
+        <member name="F:bbv.Common.Web.ObjectFactory.Scope.Cache">
+            <summary>The object is stored in the Cache. It will remain there until it is removed by the asp.net cache manager.</summary>
+        </member>
+        <member name="F:bbv.Common.Web.ObjectFactory.Scope.Session">
+            <summary>The object is stored in the Session and will remain there as long as the Session is running.</summary>
+        </member>
+        <member name="F:bbv.Common.Web.ObjectFactory.Scope.Application">
+            <summary>The object is stored in the Application state and will remain there until the application is stopped.</summary>
+        </member>
+        <member name="F:bbv.Common.Web.ObjectFactory.Scope.Undefined">
+            <summary>Used internally</summary>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryPage">
+            <summary>
+            The ObjectFactory class acts as a base class for all Pages that want to take part ob Dependency Injection with the ObjectFactory.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryPage.OnPreInit(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Web.UI.Page.PreInit"/> event at the beginning of page initialization.
+            Initializes the <see cref="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryPage.ObjectFactory"/>.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryPage.CreateObjectFactory">
+            <summary>
+            Creates the object factory for this page.
+            </summary>
+            <remarks>
+            Derived classes can override this method to initialize a <see cref="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryPage.ObjectFactory"/> of 
+            thir own.
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryPage.ObjectFactory">
+            <summary>
+            Gets the object factory of this page.
+            </summary>
+            <value>The object factory.</value>
+        </member>
+        <member name="T:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryUserControl">
+            <summary>
+            Base for all UserControls that want to take part in Dependency Injection with the ObjectFactory
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryUserControl.ObjectFactoryPage">
+            <summary>
+            Gets the <see cref="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryUserControl.ObjectFactoryPage"/> this user control is embedded.
+            </summary>
+            <value>The object factory page.</value>
+            <exception cref="T:System.Exception">
+            Thrown if this user control is not embedded within an <see cref="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryUserControl.ObjectFactoryPage"/>.
+            </exception>
+        </member>
+        <member name="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryUserControl.ObjectFactory">
+            <summary>
+            Gets the object factory of the <see cref="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryUserControl.ObjectFactoryPage"/> this user control is embedded.
+            </summary>
+            <remarks>
+            <see cref="T:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryUserControl"/>s use the <see cref="P:bbv.Common.Web.ObjectFactory.UI.ObjectFactoryUserControl.ObjectFactory"/> of their pages.
+            </remarks>
+            <value>The object factory.</value>
+        </member>
+        <member name="T:bbv.Common.Web.UI.TextControlHelper">
+            <summary>
+            Helper class for handling TextBoxes.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Bind(System.Web.UI.ITextControl,System.DateTime)">
+            <summary>
+            Fills the date part of a DateTime into a TextBox (Format: dd.MM.yyyy).
+            </summary>
+            <param name="txt"></param>
+            <param name="date"></param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Bind(System.Web.UI.ITextControl,System.Nullable{System.DateTime})">
+            <summary>
+            Fills the date part of a DateTime into a TextBox (Format: dd.MM.yyyy).
+            Empty string if null.
+            </summary>
+            <param name="txt"></param>
+            <param name="date"></param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Bind(System.Web.UI.ITextControl,System.Decimal,System.String)">
+            <summary>
+            Binds a <see cref="T:System.Web.UI.ITextControl"/> with a decimal.
+            </summary>
+            <param name="txt">The <see cref="T:System.Web.UI.ITextControl"/></param>
+            <param name="d">The decimal value.</param>
+            <param name="format">The format string.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Bind(System.Web.UI.ITextControl,System.Decimal)">
+            <summary>
+            Binds a <see cref="T:System.Web.UI.ITextControl"/> with a decimal and format string "0.00".
+            </summary>
+            <param name="txt">The <see cref="T:System.Web.UI.ITextControl"/></param>
+            <param name="d">The decimal value.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Bind(System.Web.UI.ITextControl,System.Nullable{System.Decimal})">
+            <summary>
+            Binds a <see cref="T:System.Web.UI.ITextControl"/> with a decimal if it is not null otherwise the text is cleared.
+            </summary>
+            <param name="txt">The <see cref="T:System.Web.UI.ITextControl"/></param>
+            <param name="d">The decimal value.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Bind(System.Web.UI.ITextControl,System.Int32,System.String)">
+            <summary>
+            Binds a <see cref="T:System.Web.UI.ITextControl"/> with an int value.
+            </summary>
+            <param name="txt">The <see cref="T:System.Web.UI.ITextControl"/>.</param>
+            <param name="i">The int value.</param>
+            <param name="format">The format string.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Bind(System.Web.UI.ITextControl,System.Int32)">
+            <summary>
+            Binds a <see cref="T:System.Web.UI.ITextControl"/> with an int value.
+            </summary>
+            <param name="txt">The <see cref="T:System.Web.UI.ITextControl"/>.</param>
+            <param name="i">The int value.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Bind(System.Web.UI.ITextControl,System.Nullable{System.Int32})">
+            <summary>
+            Binds a <see cref="T:System.Web.UI.ITextControl"/> with an int value. If value is null then the text is cleared.
+            </summary>
+            <param name="txt">The <see cref="T:System.Web.UI.ITextControl"/>.</param>
+            <param name="i">The int value.</param>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Unbind``1(System.Web.UI.ITextControl)">
+            <summary>
+            Returns the text of a TextBox in a specific type.
+            </summary>
+            <typeparam name="T">The type the text in the TextBox is converted to.</typeparam>
+            <param name="txt">The TextBox</param>
+            <returns>Converted value</returns>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Unbind``1(System.Web.UI.ITextControl,System.Boolean@,System.Exception)">
+            <summary>
+            Returns the text of a TextBox in a specific type.
+            </summary>
+            <typeparam name="T">The type the text in the TextBox is converted to.</typeparam>
+            <param name="txt">The TextBox</param>
+            <param name="valid">Whether the conversion was successful. Will remain false if false was passed to the method.</param>
+            <param name="e">The exception that is added to the ExceptionRepository if the conversion fails. Can be null.</param>
+            <returns>Converted value or default value.</returns>
+        </member>
+        <member name="M:bbv.Common.Web.UI.TextControlHelper.Unbind``1(System.Web.UI.ITextControl,System.Data.DataRow,System.Data.DataColumn,System.Boolean@,System.Exception)">
+            <summary>
+            Stores the value from a TextBox to a column in a DataRow.
+            If the text is empty then DBNull is stored.
+            !! Do not use for string values when empty values should result in an empty string !!
+            </summary>
+            <typeparam name="T">The type the text in the TextBox is converted to.</typeparam>
+            <param name="txt">The TextBox</param>
+            <param name="row">The DataRow the value is written to.</param>
+            <param name="column">The DataColumn the value is written to.</param>
+            <param name="valid">Whether the conversion was successful. Will remain false if false was passed to the method.</param>
+            <param name="e">The exception that is added to the ExceptionRepository if the conversion fails. Can be null.</param>
+        </member>
+    </members>
+</doc>

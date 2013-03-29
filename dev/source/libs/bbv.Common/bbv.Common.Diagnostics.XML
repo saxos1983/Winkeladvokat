@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.Diagnostics</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.Diagnostics.ApplicationHelper">
+            <summary>
+            Provides functionality in the scope of applications.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Diagnostics.ApplicationHelper.CheckApplicationAlreadyRunning(System.Boolean)">
+            <summary>
+            Checks whether another instance of the same application is already running.
+            </summary>
+            <param name="switchToAlreadyRunningProcess">Whether the already running process is flashed and brought to front.</param>
+            <returns>Whether another instance of the application is already running.</returns>
+        </member>
+        <member name="M:bbv.Common.Diagnostics.ApplicationHelper.SwitchToThisWindow(System.IntPtr,System.Boolean)">
+            <summary>
+            EXTERN
+            The SwitchToThisWindow function is called to switch focus to a specified window and bring it to the foreground.
+            </summary>
+            <param name="hWnd">Handle to the window being switched to.</param>
+            <param name="fAltTab">A TRUE for this parameter indicates that the window is being switched to using the Alt/Ctl+Tab key sequence. This parameter should be FALSE otherwise.</param>
+        </member>
+        <member name="M:bbv.Common.Diagnostics.ApplicationHelper.ShowWindowAsync(System.IntPtr,System.Int32)">
+            <summary>
+            The ShowWindowAsync function sets the show state of a window created by a different thread.
+            </summary>
+            <param name="hWnd">Handle to the window.</param>
+            <param name="swCommand">Specifies how the window is to be shown. For a list of possible values, see the description of the ShowWindow function.</param>
+            <returns></returns>
+        </member>
+        <member name="M:bbv.Common.Diagnostics.ApplicationHelper.IsWindowVisible(System.IntPtr)">
+            <summary>
+            The IsWindowVisible function retrieves the visibility state of the specified window.
+            </summary>
+            <param name="hwnd">Handle to the window to test.</param>
+            <returns>
+            If the specified window, its parent window, its parent's parent window, and so forth, have the WS_VISIBLE style, the return value is nonzero. 
+            Otherwise, the return value is zero. Because the return value specifies whether the window has the WS_VISIBLE style, it may be nonzero even if 
+            the window is totally obscured by other windows.
+            </returns>
+        </member>
+        <member name="T:bbv.Common.Diagnostics.HighResolutionStopWatch">
+            <summary>
+            The <see cref="T:bbv.Common.Diagnostics.HighResolutionStopWatch"/> is used to meassure time between the calls to Start and Stop.
+            </summary>
+            <example>
+            <code>
+            PerformanceTimer pt = new PerformanceTimer();
+            pt.Start();
+            //do something
+            pt.Stop();
+            Console.WriteLine(pt.ElapsedTimeMilliseconds);
+            </code>
+            </example>
+        </member>
+        <member name="M:bbv.Common.Diagnostics.HighResolutionStopWatch.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.Diagnostics.HighResolutionStopWatch"/> class and initializes 
+            the <see cref="P:bbv.Common.Diagnostics.HighResolutionStopWatch.Frequency"/> of the high-resolution performance counter.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Diagnostics.HighResolutionStopWatch.Start">
+            <summary>
+            Starts the performance measuring.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Diagnostics.HighResolutionStopWatch.Stop">
+            <summary>
+            Stops the performance measuring.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Diagnostics.HighResolutionStopWatch.Reset">
+            <summary>
+            Resets all internal variables.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Diagnostics.HighResolutionStopWatch.Elapsed">
+            <summary>
+            Gets the elapsed counts of the last performance measure.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Diagnostics.HighResolutionStopWatch.Seconds">
+            <summary>
+            Gets the elapsed seconds of the last performance measure.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Diagnostics.HighResolutionStopWatch.Milliseconds">
+            <summary>
+            Gets the elapsed milliseconds of the last performance measure.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Diagnostics.HighResolutionStopWatch.Frequency">
+            <summary>
+            Gets the Frequency of of the high-resolution performance counter.
+            </summary>
+        </member>
+    </members>
+</doc>

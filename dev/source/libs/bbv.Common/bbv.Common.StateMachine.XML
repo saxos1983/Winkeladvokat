@@ -1,0 +1,2116 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.StateMachine</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.StateMachine.Internals.ActionHolder">
+            <summary>
+            Wraps a parameterless action.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IActionHolder">
+            <summary>
+            Wrapper for parameterless actions and actions with parameters.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IActionHolder.Execute">
+            <summary>
+            Executes the wrapped action.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.ActionHolder.action">
+            <summary>
+            the wrapped action.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.ActionHolder.#ctor(System.Action)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.ActionHolder"/> class.
+            </summary>
+            <param name="action">The wrapped action.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.ActionHolder.Execute">
+            <summary>
+            Executes the wrapped action.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.ActionHolder`1">
+            <summary>
+            Wraps an action with a single parameter.
+            </summary>
+            <typeparam name="T">The type of the parameter of the action.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.ActionHolder`1.action">
+            <summary>
+            the wrapped action
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.ActionHolder`1.parameter">
+            <summary>
+            the parameter that is passed to the action on execution.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.ActionHolder`1.#ctor(System.Action{`0},`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.ActionHolder`1"/> class.
+            </summary>
+            <param name="action">The wrapped action.</param>
+            <param name="parameter">The parameter that is passed to the action on execution.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.ActionHolder`1.Execute">
+            <summary>
+            Executes the wrapped action.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.StateMachine.ActiveStateMachine`2">
+            <summary>
+            An active state machine.
+            This state machine reacts to events on its own worker thread and the <see cref="M:bbv.Common.StateMachine.ActiveStateMachine`2.Fire(`1,System.Object[])"/> or
+            <see cref="M:bbv.Common.StateMachine.ActiveStateMachine`2.FirePriority(`1,System.Object[])"/> methods return immediately back to the caller.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="T:bbv.Common.StateMachine.IStateMachine`2">
+            <summary>
+            A state machine.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.IStateMachine`2.In(`0)">
+            <summary>
+            Define the behavior of a state.
+            </summary>
+            <param name="state">The state.</param>
+            <returns>Syntax to build state behavior.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.IStateMachine`2.DefineHierarchyOn(`0,`0,bbv.Common.StateMachine.HistoryType,`0[])">
+            <summary>
+            Defines a state hierarchy.
+            </summary>
+            <param name="superStateId">The super state id.</param>
+            <param name="initialSubStateId">The initial sub state id.</param>
+            <param name="historyType">Type of the history.</param>
+            <param name="subStateIds">The sub state ids.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.IStateMachine`2.Fire(`1,System.Object[])">
+            <summary>
+            Fires the specified event.
+            </summary>
+            <param name="eventId">The event.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.IStateMachine`2.FirePriority(`1,System.Object[])">
+            <summary>
+            Fires the specified priority event. The event will be handled before any already queued event.
+            </summary>
+            <param name="eventId">The event.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.IStateMachine`2.Initialize(`0)">
+            <summary>
+            Initializes the state machine to the specified initial state.
+            </summary>
+            <param name="initialState">The state to which the state machine is initialized.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.IStateMachine`2.Start">
+            <summary>
+            Starts the state machine. Events will be processed.
+            If the state machine is not started then the events will be queued until the state machine is started.
+            Already queued events are processed
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.IStateMachine`2.Stop">
+            <summary>
+            Stops the state machine. Events will be queued until the state machine is started.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.IStateMachine`2.Report">
+            <summary>
+            Returns a report of this state machine with all states and transitions.
+            </summary>
+            <returns>A string containing a report of this state machine with all states and transitions.</returns>
+        </member>
+        <member name="E:bbv.Common.StateMachine.IStateMachine`2.TransitionDeclined">
+            <summary>
+            Occurs when no transition could be executed.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.IStateMachine`2.ExceptionThrown">
+            <summary>
+            Occurs when an exception was thrown inside the state machine.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.IStateMachine`2.TransitionExceptionThrown">
+            <summary>
+            Occurs when an exception was thrown inside a transition of the state machine.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.IStateMachine`2.TransitionBegin">
+            <summary>
+            Occurs when a transition begins.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.IStateMachine`2.TransitionCompleted">
+            <summary>
+            Occurs when a transition completed.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.StateMachine.IStateMachine`2.IsRunning">
+            <summary>
+            Gets a value indicating whether this instance is running. The state machine is running if if was started and not yet stopped.
+            </summary>
+            <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="F:bbv.Common.StateMachine.ActiveStateMachine`2.stateMachine">
+            <summary>
+            The internal state machine.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.ActiveStateMachine`2.moduleController">
+            <summary>
+            The module controller used to make this state machine active.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.ActiveStateMachine`2"/> class.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.ActiveStateMachine`2"/> class.
+            </summary>
+            <param name="name">The name of the state machine. Used in log messages.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.ActiveStateMachine`2"/> class.
+            </summary>
+            <param name="name">The name of the state machine. Used in log messages.</param>
+            <param name="logger">The logger used to log messages.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.In(`0)">
+            <summary>
+            Define the behavior of a state.
+            </summary>
+            <param name="state">The state.</param>
+            <returns>Syntax to build state behavior.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.DefineHierarchyOn(`0,`0,bbv.Common.StateMachine.HistoryType,`0[])">
+            <summary>
+            Defines a state hierarchy.
+            </summary>
+            <param name="superStateId">The super state id.</param>
+            <param name="initialSubStateId">The initial state id.</param>
+            <param name="historyType">Type of the history.</param>
+            <param name="subStateIds">The sub state ids.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.Fire(`1,System.Object[])">
+            <summary>
+            Fires the specified event.
+            </summary>
+            <param name="eventId">The event.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.FirePriority(`1,System.Object[])">
+            <summary>
+            Fires the specified priority event. The event will be handled before any already queued event.
+            </summary>
+            <param name="eventId">The event.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.Initialize(`0)">
+            <summary>
+            Initializes the state machine to the specified initial state.
+            </summary>
+            <param name="initialState">The state to which the state machine is initialized.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.Start">
+            <summary>
+            Starts the state machine. Events will be processed.
+            If the state machine is not started then the events will be queued until the state machine is started.
+            Already queued events are processed
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.Stop">
+            <summary>
+            Stops the state machine. Events will be queued until the state machine is started.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.Report">
+            <summary>
+            Returns a report of this state machine with all states and transitions.
+            </summary>
+            <returns>A string containing a report of this state machine with all states and transitions.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.Execute(bbv.Common.StateMachine.Internals.EventInformation{`1})">
+            <summary>
+            Fires an event to the state machine.
+            </summary>
+            <param name="message">The message containing the event information.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.Initialize(bbv.Common.StateMachine.ActiveStateMachine{`0,`1}.InitializeMessage)">
+            <summary>
+            Initializes the state machine on the worker thread.
+            </summary>
+            <param name="message">The message containing the initial state.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="E:bbv.Common.StateMachine.ActiveStateMachine`2.TransitionDeclined">
+            <summary>
+            Occurs when no transition could be executed.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.ActiveStateMachine`2.ExceptionThrown">
+            <summary>
+            Occurs when an exception was thrown inside the state machine.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.ActiveStateMachine`2.TransitionExceptionThrown">
+            <summary>
+            Occurs when an exception was thrown inside a transition of the state machine.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.ActiveStateMachine`2.TransitionBegin">
+            <summary>
+            Occurs when a transition begins.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.ActiveStateMachine`2.TransitionCompleted">
+            <summary>
+            Occurs when a transition completed.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.StateMachine.ActiveStateMachine`2.IsRunning">
+            <summary>
+            Gets a value indicating whether this instance is running. The state machine is running if if was started and not yet stopped.
+            </summary>
+            <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.ActiveStateMachine`2.InitializeMessage">
+            <summary>
+            Message used to communicate the state to initialize to the worker thread.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ActiveStateMachine`2.InitializeMessage.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.ActiveStateMachine`2.InitializeMessage"/> class.
+            </summary>
+            <param name="initialState">The initial state.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.ActiveStateMachine`2.InitializeMessage.InitialState">
+            <summary>
+            Gets the initial state.
+            </summary>
+            <value>The initial state.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.ContextEventArgs`2">
+            <summary>
+            Event arguments holding context information.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.ContextEventArgs`2.stateContext">
+            <summary>
+            The context.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.ContextEventArgs`2.#ctor(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.ContextEventArgs`2"/> class.
+            </summary>
+            <param name="stateContext">The event context.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.ContextEventArgs`2.StateContext">
+            <summary>
+            Gets the event context.
+            </summary>
+            <value>The event context.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.StateMachineInitializer`2">
+            <summary>
+            Responsible for entering the initial state of the state machine. 
+            All states up in the hierarchy are entered, too.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateMachineInitializer`2.initialState">
+            <summary>
+            The state to enter.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateMachineInitializer`2.stateContext">
+            <summary>
+            Context information of this operation.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachineInitializer`2.#ctor(bbv.Common.StateMachine.Internals.IState{`0,`1},bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.StateMachineInitializer`2"/> class.
+            </summary>
+            <param name="initialState">The initial state to enter.</param>
+            <param name="stateContext">The state context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachineInitializer`2.EnterInitialState">
+            <summary>
+            Enters the initial state by entering all states further up in the hierarchy.
+            </summary>
+            <returns>The entered state. The initial state or a sub state of the initial state.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachineInitializer`2.TraverseUpTheStateHierarchy">
+            <summary>
+            Traverses up the state hierarchy and build the stack of states.
+            </summary>
+            <returns>The stack containing all states up the state hierarchy.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachineInitializer`2.TraverseDownTheStateHierarchyAndEnterStates(System.Collections.Generic.Stack{bbv.Common.StateMachine.Internals.IState{`0,`1}})">
+            <summary>
+            Traverses down the state hierarchy and enter all states along.
+            </summary>
+            <param name="stack">The stack containing the state hierarchy.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachineReport`2.Report(System.String,System.Collections.Generic.IEnumerable{bbv.Common.StateMachine.Internals.IState{`0,`1}},System.Nullable{`0})">
+            <summary>
+            Returns a string that describes this state machine.
+            </summary>
+            <returns>Description of the state machine</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachineReport`2.ReportState(bbv.Common.StateMachine.Internals.IState{`0,`1},System.Text.StringBuilder,System.String)">
+            <summary>
+            Creates the part of the report for the specified state.
+            </summary>
+            <param name="state">The state.</param>
+            <param name="report">The report to add to.</param>
+            <param name="indentation">The current indentation level.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachineReport`2.ReportStateNameInitialStateHistoryTypeEntryAndExitAction(System.Text.StringBuilder,System.String,bbv.Common.StateMachine.Internals.IState{`0,`1})">
+            <summary>
+            Reports the state name, initial state, history type, entry and exit action.
+            </summary>
+            <param name="report">The report.</param>
+            <param name="indentation">The current indentation.</param>
+            <param name="state">The state.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachineReport`2.ReportTransition(System.Text.StringBuilder,System.String,bbv.Common.StateMachine.Internals.TransitionDictionary{`0,`1}.TransitionInfo)">
+            <summary>
+            Reports the transition.
+            </summary>
+            <param name="report">The report.</param>
+            <param name="indentation">The indentation.</param>
+            <param name="transition">The transition.</param>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.StateContext`2">
+            <summary>
+            Provides context information. Gathers information during executing operations on the state machine
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateContext`2.state">
+            <summary>
+            The source state of the transition.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateContext`2.exceptions">
+            <summary>
+            The exceptions that occurred during performing an operation.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateContext`2.records">
+            <summary>
+            The list of records (state exits, entries)
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateContext`2.#ctor(bbv.Common.StateMachine.Internals.IState{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.StateContext`2"/> class.
+            </summary>
+            <param name="state">The state.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateContext`2.AddRecord(`0,bbv.Common.StateMachine.Internals.StateContext{`0,`1}.RecordType)">
+            <summary>
+            Adds a record.
+            </summary>
+            <param name="stateId">The state id.</param>
+            <param name="recordType">Type of the record.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateContext`2.GetRecords">
+            <summary>
+            Gets all records in string representation.
+            </summary>
+            <returns>All records in string representation.</returns>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.StateContext`2.State">
+            <summary>
+            Gets the source state of the transition.
+            </summary>
+            <value>The state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.StateContext`2.Exceptions">
+            <summary>
+            Gets the exceptions.
+            </summary>
+            <value>The exceptions.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.StateContext`2.RecordType">
+            <summary>
+            Specifies the type of the record.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateContext`2.RecordType.Enter">
+            <summary>
+            A state was entered.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateContext`2.RecordType.Exit">
+            <summary>
+            A state was exited.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.StateContext`2.Record">
+            <summary>
+            A record of a state exit or entry. Used to log the way taken by transitions and initialization.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateContext`2.Record.#ctor(`0,bbv.Common.StateMachine.Internals.StateContext{`0,`1}.RecordType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.StateContext`2.Record"/> class.
+            </summary>
+            <param name="stateId">The state id.</param>
+            <param name="recordType">Type of the record.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateContext`2.Record.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.StateContext`2.Record.StateId">
+            <summary>
+            Gets or sets the state id.
+            </summary>
+            <value>The state id.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.StateContext`2.Record.RecordType">
+            <summary>
+            Gets or sets the type of the record.
+            </summary>
+            <value>The type of the record.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.EventInformation`1">
+            <summary>
+            Provides information about an event: event-id and arguments.
+            </summary>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.EventInformation`1.#ctor(`0,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.EventInformation`1"/> class.
+            </summary>
+            <param name="eventId">The event id.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.EventInformation`1.EventId">
+            <summary>
+            Gets the event id.
+            </summary>
+            <value>The event id.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.EventInformation`1.EventArguments">
+            <summary>
+            Gets the event arguments.
+            </summary>
+            <value>The event arguments.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.ExceptionEventArgs`2">
+            <summary>
+            Event arguments providing exception information.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.ExceptionEventArgs`2.exception">
+            <summary>
+            The exception.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.ExceptionEventArgs`2.#ctor(bbv.Common.StateMachine.Internals.StateContext{`0,`1},System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.ExceptionEventArgs`2"/> class.
+            </summary>
+            <param name="stateContext">The event context.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.ExceptionEventArgs`2.Exception">
+            <summary>
+            Gets the exception.
+            </summary>
+            <value>The exception.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.HistoryType">
+            <summary>
+            Defines the history behavior of a state (on re-entrance of a super state).
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.HistoryType.None">
+            <summary>
+            The state enters into its initial sub-state. The sub-state itself enters its initial sub-state and so on
+            until the innermost nested state is reached.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.HistoryType.Shallow">
+            <summary>
+            The state enters into its last active sub-state. The sub-state itself enters its initial sub-state and so on
+            until the innermost nested state is reached.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.HistoryType.Deep">
+            <summary>
+            The state enters into its last active sub-state. The sub-state itself enters into-its last active state and so on
+            until the innermost nested state is reached.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.INotifier`2">
+            <summary>
+            Provides functionalities to notify events.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.INotifier`2.OnExceptionThrown(bbv.Common.StateMachine.Internals.StateContext{`0,`1},System.Exception)">
+            <summary>
+            Called when an exception was thrown.
+            </summary>
+            <param name="stateContext">The context.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.INotifier`2.OnExceptionThrown(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1},System.Exception)">
+            <summary>
+            Called when an exception was thrown in a transition.
+            </summary>
+            <param name="context">The transition context.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.INotifier`2.OnTransitionBegin(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Called before a transition is executed.
+            </summary>
+            <param name="context">The context.</param>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IState`2">
+            <summary>
+            Represents a state of the state machine.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IState`2.Fire(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Fires the specified event id on this state.
+            </summary>
+            <param name="context">The event context.</param>
+            <returns>The result of the transition.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IState`2.Entry(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this state.
+            </summary>
+            <param name="stateContext">The event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IState`2.Exit(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Exits this state.
+            </summary>
+            <param name="stateContext">The event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IState`2.EnterByHistory(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this state by its history depending on <see cref="P:bbv.Common.StateMachine.Internals.State`2.HistoryType"/>.
+            The <see cref="M:bbv.Common.StateMachine.Internals.State`2.Entry(bbv.Common.StateMachine.Internals.StateContext{`0,`1})"/> method has to be called already.
+            </summary>
+            <param name="stateContext">The event context.</param>
+            <returns>
+            The active state (depends on <see cref="P:bbv.Common.StateMachine.Internals.State`2.HistoryType"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IState`2.EnterShallow(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this state is shallow mode:
+            The entry action is executed and the initial state is entered in shallow mode if there is one.
+            </summary>
+            <param name="stateContext">The event context.</param>
+            <returns>The active state.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IState`2.EnterDeep(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this state is deep mode:
+            The entry action is executed and the initial state is entered in deep mode if there is one.
+            </summary>
+            <param name="stateContext">The event context.</param>
+            <returns>The active state.</returns>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.Id">
+            <summary>
+            Gets the id of this state.
+            </summary>
+            <value>The id of this state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.InitialState">
+            <summary>
+            Gets or sets the initial sub-state. Null if this state has no sub-states.
+            </summary>
+            <value>The initial sub-state. Null if this state has no sub-states.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.SuperState">
+            <summary>
+            Gets or sets the super-state. Null if this is a root state.
+            </summary>
+            <value>The super-state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.SubStates">
+            <summary>
+            Gets the sub-states.
+            </summary>
+            <value>The sub-states.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.Transitions">
+            <summary>
+            Gets the transitions.
+            </summary>
+            <value>The transitions.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.Level">
+            <summary>
+            Gets or sets the level in the hierarchy.
+            </summary>
+            <value>The level in the hierarchy.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.LastActiveState">
+            <summary>
+            Gets or sets the last active state of this state.
+            </summary>
+            <value>The last state of the active.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.EntryAction">
+            <summary>
+            Gets or sets the entry action.
+            </summary>
+            <value>The entry action.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.ExitAction">
+            <summary>
+            Gets or sets the exit action.
+            </summary>
+            <value>The exit action.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IState`2.HistoryType">
+            <summary>
+            Gets or sets the history type of this state.
+            </summary>
+            <value>The type of the history.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IStateDictionary`2">
+            <summary>
+            Manages the states of a state machine.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IStateDictionary`2.GetStates">
+            <summary>
+            Gets all states defined in this dictionary.
+            </summary>
+            <returns>All states in this directory.</returns>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.IStateDictionary`2.Item(`0)">
+            <summary>
+            Gets the <see cref="T:bbv.Common.StateMachine.Internals.IState`2"/> with the specified state id.
+            </summary>
+            <value>State with the specified id.</value>
+            <param name="stateId">The State id.</param>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IEntryActionSyntax`2">
+            <summary>
+            Defines the entry action syntax.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IExitActionSyntax`2">
+            <summary>
+            Defines the exit action syntax.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IEventSyntax`2">
+            <summary>
+            Defines the event syntax.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IEventSyntax`2.On(`1)">
+            <summary>
+            Defines an event that is accepted.
+            </summary>
+            <param name="eventId">The event id.</param>
+            <returns>Event action syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IExitActionSyntax`2.ExecuteOnExit(System.Action)">
+            <summary>
+            Defines an exit action.
+            </summary>
+            <param name="action">The action.</param>
+            <returns>Event syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IExitActionSyntax`2.ExecuteOnExit``1(System.Action{``0},``0)">
+            <summary>
+            Defines an exit action.
+            </summary>
+            <typeparam name="T">Type of the parameter of the exit action method.</typeparam>
+            <param name="action">The action.</param>
+            <param name="parameter">The parameter that will be passed to the exit action.</param>
+            <returns>Exit action syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IEntryActionSyntax`2.ExecuteOnEntry(System.Action)">
+            <summary>
+            Defines an entry action.
+            </summary>
+            <param name="action">The action.</param>
+            <returns>Exit action syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IEntryActionSyntax`2.ExecuteOnEntry``1(System.Action{``0},``0)">
+            <summary>
+            Defines an entry action.
+            </summary>
+            <typeparam name="T">Type of the parameter of the entry action method.</typeparam>
+            <param name="action">The action.</param>
+            <param name="parameter">The parameter that will be passed to the entry action.</param>
+            <returns>Exit action syntax.</returns>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IGotoSyntax`2">
+            <summary>
+            Defines the goto syntax.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IGotoSyntax`2.Goto(`0)">
+            <summary>
+            Defines where to go in response to an event.
+            </summary>
+            <param name="target">The target.</param>
+            <returns>Execute syntax.</returns>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IExecuteSyntax`2">
+            <summary>
+            Defines the execute syntax.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IGuardSyntax`2">
+            <summary>
+            Defines the guard syntax.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IGuardSyntax`2.OnlyIf(System.Func{System.Object[],System.Boolean})">
+            <summary>
+            Defines a guard for a transition.
+            </summary>
+            <param name="guard">The guard.</param>
+            <returns>Event syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IExecuteSyntax`2.Execute(System.Action{System.Object[]}[])">
+            <summary>
+            Defines the actions to execute on a transition.
+            </summary>
+            <param name="actions">The actions.</param>
+            <returns>Guard syntax.</returns>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.IEventActionSyntax`2">
+            <summary>
+            Defines the action syntax.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IEventActionSyntax`2.Goto(`0)">
+            <summary>
+            Defines where to go in response to an event.
+            </summary>
+            <param name="target">The target.</param>
+            <returns>Execute syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.IEventActionSyntax`2.Execute(System.Action{System.Object[]}[])">
+            <summary>
+            Defines the actions to execute on a transition.
+            </summary>
+            <param name="actions">The actions.</param>
+            <returns>Guard syntax.</returns>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.ITransition`2">
+            <summary>
+            Represents a transition in the state machine.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.ITransition`2.Fire(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Fires the transition.
+            </summary>
+            <param name="context">The event context.</param>
+            <returns>The result of the transition.</returns>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.ITransition`2.Source">
+            <summary>
+            Gets or sets the source state of the transition.
+            </summary>
+            <value>The source.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.ITransition`2.Target">
+            <summary>
+            Gets or sets the target state of the transition.
+            </summary>
+            <value>The target.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.ITransition`2.Actions">
+            <summary>
+            Gets the actions of this transaction.
+            </summary>
+            <value>The actions.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.ITransition`2.Guard">
+            <summary>
+            Gets or sets the guard of this transition.
+            </summary>
+            <value>The guard.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.ITransitionResult`2">
+            <summary>
+            Represents the result of a transition.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.ITransitionResult`2.Fired">
+            <summary>
+            Gets a value indicating whether this <see cref="T:bbv.Common.StateMachine.Internals.ITransitionResult`2"/> is fired.
+            </summary>
+            <value><c>true</c> if fired; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.ITransitionResult`2.NewState">
+            <summary>
+            Gets the new state.
+            </summary>
+            <value>The new state.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.PassiveStateMachine`2">
+            <summary>
+            A passive state machine.
+            This state machine reacts to events on the current thread.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.PassiveStateMachine`2.stateMachine">
+            <summary>
+            The internal state machine.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.PassiveStateMachine`2.events">
+            <summary>
+            List of all queued events.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.PassiveStateMachine`2.executing">
+            <summary>
+            Whether this state machine is executing an event. Allows that events can be added while executing.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.PassiveStateMachine`2"/> class.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.PassiveStateMachine`2"/> class.
+            </summary>
+            <param name="name">The name of the state machine. Used in log messages.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.PassiveStateMachine`2"/> class.
+            </summary>
+            <param name="name">The name of the state machine. Used in log messages.</param>
+            <param name="logger">The logger used for log messages.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.In(`0)">
+            <summary>
+            Define the behavior of a state.
+            </summary>
+            <param name="state">The state.</param>
+            <returns>Syntax to build state behavior.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.DefineHierarchyOn(`0,`0,bbv.Common.StateMachine.HistoryType,`0[])">
+            <summary>
+            Defines a state hierarchy.
+            </summary>
+            <param name="superStateId">The super state id.</param>
+            <param name="initialSubStateId">The initial state id.</param>
+            <param name="historyType">Type of the history.</param>
+            <param name="subStateIds">The sub state ids.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.Fire(`1,System.Object[])">
+            <summary>
+            Fires the specified event.
+            </summary>
+            <param name="eventId">The event.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.FirePriority(`1,System.Object[])">
+            <summary>
+            Fires the specified priority event. The event will be handled before any already queued event.
+            </summary>
+            <param name="eventId">The event.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.Initialize(`0)">
+            <summary>
+            Initializes the state machine to the specified initial state.
+            </summary>
+            <param name="initialState">The state to which the state machine is initialized.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.Start">
+            <summary>
+            Starts the state machine. Events will be processed.
+            If the state machine is not started then the events will be queued until the state machine is started.
+            Already queued events are processed.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.Stop">
+            <summary>
+            Stops the state machine. Events will be queued until the state machine is started.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.Report">
+            <summary>
+            Returns a report of this state machine with all states and transitions.
+            </summary>
+            <returns>A string containing a report of this state machine with all states and transitions.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.Execute">
+            <summary>
+            Executes all queued events.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.ProcessQueuedEvents">
+            <summary>
+            Processes the queued events.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.GetNextEventToProcess">
+            <summary>
+            Gets the next event to process for the queue.
+            </summary>
+            <returns>The next queued event.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.PassiveStateMachine`2.FireEventOnStateMachine(bbv.Common.StateMachine.Internals.EventInformation{`1})">
+            <summary>
+            Fires the event on state machine.
+            </summary>
+            <param name="e">The event to fire.</param>
+        </member>
+        <member name="E:bbv.Common.StateMachine.PassiveStateMachine`2.TransitionDeclined">
+            <summary>
+            Occurs when no transition could be executed.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.PassiveStateMachine`2.ExceptionThrown">
+            <summary>
+            Occurs when an exception was thrown inside the state machine.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.PassiveStateMachine`2.TransitionExceptionThrown">
+            <summary>
+            Occurs when an exception was thrown inside a transition of the state machine.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.PassiveStateMachine`2.TransitionBegin">
+            <summary>
+            Occurs when a transition begins.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.PassiveStateMachine`2.TransitionCompleted">
+            <summary>
+            Occurs when a transition completed.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.StateMachine.PassiveStateMachine`2.IsRunning">
+            <summary>
+            Gets a value indicating whether this instance is running. The state machine is running if if was started and not yet stopped.
+            </summary>
+            <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.State`2">
+            <summary>
+            A state of the state machine.
+            A state can be a sub-state or super-state of another state.
+            </summary>
+            <typeparam name="TState">The type of the state id.</typeparam>
+            <typeparam name="TEvent">The type of the event id.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.State`2.log">
+            <summary>
+            The logger of this class.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.State`2.subStates">
+            <summary>
+            Collection of the sub-states of this state.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.State`2.transitions">
+            <summary>
+            Collection of transitions that start in this state (<see cref="P:bbv.Common.StateMachine.Internals.ITransition`2.Source"/> is equal to this state).
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.State`2.notifier">
+            <summary>
+            The notifier used to notify events.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.State`2.level">
+            <summary>
+            The level of this state within the state hierarchy [1..maxLevel]
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.State`2.superState">
+            <summary>
+            The super-state of this state. Null for states with <see cref="F:bbv.Common.StateMachine.Internals.State`2.level"/> equal to 1.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.State`2.initialState">
+            <summary>
+            The initial sub-state of this state.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.State`2.historyType">
+            <summary>
+            The <see cref="P:bbv.Common.StateMachine.Internals.State`2.HistoryType"/> of this state.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.#ctor(`0,bbv.Common.StateMachine.Internals.INotifier{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.State`2"/> class.
+            </summary>
+            <param name="id">The unique id of this state.</param>
+            <param name="notifier">The notifier used to notify events.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.Fire(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Goes recursively up the state hierarchy until a state is found that can handle the event.
+            </summary>
+            <param name="context">The event context.</param>
+            <returns>The result of the transition.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.Entry(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this state.
+            </summary>
+            <param name="stateContext">The event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.Exit(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Exits this state, executes the exit action and sets the <see cref="P:bbv.Common.StateMachine.Internals.State`2.LastActiveState"/> on the super-state.
+            </summary>
+            <param name="stateContext">The event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.EnterByHistory(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this state by its history depending on <see cref="P:bbv.Common.StateMachine.Internals.State`2.HistoryType"/>.
+            The <see cref="M:bbv.Common.StateMachine.Internals.State`2.Entry(bbv.Common.StateMachine.Internals.StateContext{`0,`1})"/> method has to be called already.
+            </summary>
+            <param name="stateContext">The event context.</param>
+            <returns>
+            The active state (depends on <see cref="P:bbv.Common.StateMachine.Internals.State`2.HistoryType"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.EnterShallow(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this state is shallow mode:
+            The entry action is executed and the initial state is entered in shallow mode if there is one.
+            </summary>
+            <param name="stateContext">The event context.</param>
+            <returns>The entered state.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.EnterDeep(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this state is deep mode:
+            The entry action is executed and the initial state is entered in deep mode if there is one.
+            </summary>
+            <param name="stateContext">The event context.</param>
+            <returns>The active state.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.SetInitialLevel">
+            <summary>
+            Sets the initial level depending on the level of the super state of this instance.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.SetLevelOfSubStates">
+            <summary>
+            Sets the level of all sub states.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.ExecuteEntryAction(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Executes the entry action.
+            </summary>
+            <param name="stateContext">The state context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.ExecuteExitAction(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Executes the exit action.
+            </summary>
+            <param name="stateContext">The state context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.HandleException(System.Exception,bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Handles the specified exception.
+            </summary>
+            <param name="exception">The exception.</param>
+            <param name="stateContext">The state context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.SetThisStateAsLastStateOfSuperState">
+            <summary>
+            Sets this instance as the last state of this instance's super state.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.EnterHistoryDeep(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this instance with history type = deep.
+            </summary>
+            <param name="stateContext">The state context.</param>
+            <returns>The entered state.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.EnterHistoryShallow(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this instance with history type = shallow.
+            </summary>
+            <param name="stateContext">The state context.</param>
+            <returns>The entered state.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.EnterHistoryNone(bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Enters this instance with history type = none.
+            </summary>
+            <param name="stateContext">The state context.</param>
+            <returns>The entered state.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.CheckSuperStateIsNotThisInstance(bbv.Common.StateMachine.Internals.IState{`0,`1})">
+            <summary>
+            Throws an exception if the new super state is this instance.
+            </summary>
+            <param name="newSuperState">The value.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.CheckInitialStateIsNotThisInstance(bbv.Common.StateMachine.Internals.IState{`0,`1})">
+            <summary>
+            Throws an exception if the new initial state is this instance.
+            </summary>
+            <param name="newInitialState">The value.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.State`2.CheckInitialStateIsASubState(bbv.Common.StateMachine.Internals.IState{`0,`1})">
+            <summary>
+            Throws an exception if the new initial state is not a sub-state of this instance.
+            </summary>
+            <param name="value">The value.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.LastActiveState">
+            <summary>
+            Gets or sets the last active state of this state.
+            </summary>
+            <value>The last state of the active.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.Id">
+            <summary>
+            Gets the unique id of this state.
+            </summary>
+            <value>The id of this state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.EntryAction">
+            <summary>
+            Gets or sets the entry action.
+            </summary>
+            <value>The entry action.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.ExitAction">
+            <summary>
+            Gets or sets the exit action.
+            </summary>
+            <value>The exit action.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.InitialState">
+            <summary>
+            Gets or sets the initial sub state of this state.
+            </summary>
+            <value>The initial sub state of this state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.SuperState">
+            <summary>
+            Gets or sets the super-state of this state.
+            </summary>
+            <remarks>
+            The <see cref="P:bbv.Common.StateMachine.Internals.State`2.Level"/> of this state is changed accordingly to the super-state.
+            </remarks>
+            <value>The super-state of this super.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.Level">
+            <summary>
+            Gets or sets the level of this state in the state hierarchy.
+            When set then the levels of all sub-states are changed accordingly.
+            </summary>
+            <value>The level.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.HistoryType">
+            <summary>
+            Gets or sets the history type of this state.
+            </summary>
+            <value>The type of the history.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.SubStates">
+            <summary>
+            Gets the sub-states of this state.
+            </summary>
+            <value>The sub-states of this state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.State`2.Transitions">
+            <summary>
+            Gets the transitions that start in this state.
+            </summary>
+            <value>The transitions.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.StateBuilder`2">
+            <summary>
+            Provides operations to build a state machine.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateBuilder`2.state">
+            <summary>
+            The state on which is operated.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateBuilder`2.stateDictionary">
+            <summary>
+            The state dictionary of the state machine.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateBuilder`2.notifier">
+            <summary>
+            The notifier of the state machine.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateBuilder`2.currentTransition">
+            <summary>
+            The transition on which is operated. Null if no current transition.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.#ctor(bbv.Common.StateMachine.Internals.IState{`0,`1},bbv.Common.StateMachine.Internals.IStateDictionary{`0,`1},bbv.Common.StateMachine.Internals.INotifier{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.StateBuilder`2"/> class.
+            </summary>
+            <param name="state">The state to build.</param>
+            <param name="stateDictionary">The state dictionary of the state machine.</param>
+            <param name="notifier">The notifier of the state machine.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.ExecuteOnEntry(System.Action)">
+            <summary>
+            Defines an entry action.
+            </summary>
+            <param name="action">The action.</param>
+            <returns>Exit action syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.ExecuteOnEntry``1(System.Action{``0},``0)">
+            <summary>
+            Defines an entry action.
+            </summary>
+            <typeparam name="T">Type of the parameter of the entry action method.</typeparam>
+            <param name="action">The action.</param>
+            <param name="parameter">The parameter that will be passed to the entry action.</param>
+            <returns>Exit action syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.ExecuteOnExit(System.Action)">
+            <summary>
+            Defines an exit action.
+            </summary>
+            <param name="action">The action.</param>
+            <returns>Event syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.ExecuteOnExit``1(System.Action{``0},``0)">
+            <summary>
+            Defines an exit action.
+            </summary>
+            <typeparam name="T">Type of the parameter of the exit action method.</typeparam>
+            <param name="action">The action.</param>
+            <param name="parameter">The parameter that will be passed to the exit action.</param>
+            <returns>Exit action syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.On(`1)">
+            <summary>
+            Builds a transition.
+            </summary>
+            <param name="eventId">The event that triggers the transition.</param>
+            <returns>Syntax to build the transition.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.Goto(`0)">
+            <summary>
+            Defines where to go in response to an event.
+            </summary>
+            <param name="target">The target.</param>
+            <returns>Execute syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.Execute(System.Action{System.Object[]}[])">
+            <summary>
+            Defines the actions to execute on a transition.
+            </summary>
+            <param name="actions">The actions.</param>
+            <returns>Guard syntax.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateBuilder`2.OnlyIf(System.Func{System.Object[],System.Boolean})">
+            <summary>
+            Defines a guard for a transition.
+            </summary>
+            <param name="guard">The guard.</param>
+            <returns>Event syntax.</returns>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.StateDictionary`2">
+            <summary>
+            Dictionary mapping state ids to states.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateDictionary`2.dictionary">
+            <summary>
+            Maps ids to states.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateDictionary`2.notifier">
+            <summary>
+            The notifier of the state machine.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateDictionary`2.#ctor(bbv.Common.StateMachine.Internals.INotifier{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.StateDictionary`2"/> class.
+            </summary>
+            <param name="notifier">The notifier.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateDictionary`2.GetStates">
+            <summary>
+            Gets all states defined in this dictionary.
+            </summary>
+            <returns>All states in this directory.</returns>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.StateDictionary`2.Item(`0)">
+            <summary>
+            Gets the <see cref="T:bbv.Common.StateMachine.Internals.IState`2"/> with the specified state id.
+            </summary>
+            <value>State with the specified id.</value>
+            <param name="stateId">The State id.</param>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.StateMachine`2">
+            <summary>
+            Base implementation of a state machine.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateMachine`2.log">
+            <summary>
+            The logger of this class.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateMachine`2.states">
+            <summary>
+            The dictionary of all states.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateMachine`2.name">
+            <summary>
+            Name of this state machine used in log messages.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateMachine`2.currentState">
+            <summary>
+            The current state.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateMachine`2.initialized">
+            <summary>
+            Whether this state machine was initialized.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.StateMachine`2.initialStateId">
+            <summary>
+            The initial state of the state machine.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.StateMachine`2"/> class.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.StateMachine`2"/> class.
+            </summary>
+            <param name="name">The name of this state machine used in log messages.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.StateMachine`2"/> class.
+            </summary>
+            <param name="name">The name of this state machine used in log messages.</param>
+            <param name="logger">The logger used to log.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.In(`0)">
+            <summary>
+            Define the behavior of a state.
+            </summary>
+            <param name="state">The state.</param>
+            <returns>Syntax to build state behavior.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.Initialize(`0)">
+            <summary>
+            Initializes the state machine by setting the specified initial state.
+            </summary>
+            <param name="initialState">The initial state of the state machine.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.Fire(`1)">
+            <summary>
+            Fires the specified event.
+            </summary>
+            <param name="eventId">The event.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.Fire(`1,System.Object[])">
+            <summary>
+            Fires the specified event.
+            </summary>
+            <param name="eventId">The event.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.DefineHierarchyOn(`0,`0,bbv.Common.StateMachine.HistoryType,`0[])">
+            <summary>
+            Defines a state hierarchy.
+            </summary>
+            <param name="superStateId">The super state id.</param>
+            <param name="initialSubStateId">The initial state id.</param>
+            <param name="historyType">Type of the history.</param>
+            <param name="subStateIds">The sub state ids.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.OnExceptionThrown(bbv.Common.StateMachine.Internals.StateContext{`0,`1},System.Exception)">
+            <summary>
+            Fires the <see cref="E:bbv.Common.StateMachine.Internals.StateMachine`2.ExceptionThrown"/> event.
+            </summary>
+            <param name="stateContext">The context.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.OnExceptionThrown(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1},System.Exception)">
+            <summary>
+            Fires the <see cref="E:bbv.Common.StateMachine.Internals.StateMachine`2.TransitionExceptionThrown"/> event.
+            </summary>
+            <param name="transitionContext">The transition context.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.OnTransitionBegin(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Fires the <see cref="E:bbv.Common.StateMachine.Internals.StateMachine`2.TransitionBegin"/> event.
+            </summary>
+            <param name="transitionContext">The transition context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.Report">
+            <summary>
+            Returns a string that describes this state machine.
+            </summary>
+            <returns>Description of the state machine</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.OnTransitionDeclined(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Fires the <see cref="E:bbv.Common.StateMachine.Internals.StateMachine`2.TransitionDeclined"/> event.
+            </summary>
+            <param name="transitionContext">The transition event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.OnTransitionCompleted(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Fires the <see cref="E:bbv.Common.StateMachine.Internals.StateMachine`2.TransitionCompleted"/> event.
+            </summary>
+            <param name="transitionContext">The transition event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.Initialize(bbv.Common.StateMachine.Internals.IState{`0,`1},bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Initializes the state machine by setting the specified initial state.
+            </summary>
+            <param name="initialState">The initial state.</param>
+            <param name="stateContext">The event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.StateMachine`2.RaiseEvent``1(System.EventHandler{``0},``0,bbv.Common.StateMachine.Internals.StateContext{`0,`1},System.Boolean)">
+            <summary>
+            Raises an event and catches all exceptions. If an exception is caught then <paramref name="raiseEventOnException"/> specifies whether the
+            <see cref="E:bbv.Common.StateMachine.Internals.StateMachine`2.ExceptionThrown"/> event is risen.
+            </summary>
+            <typeparam name="T">The type of the event arguments.</typeparam>
+            <param name="eventHandler">The event handler.</param>
+            <param name="arguments">The arguments.</param>
+            <param name="stateContext">The event context.</param>
+            <param name="raiseEventOnException">if set to <c>true</c> [raise event on exception].</param>
+        </member>
+        <member name="E:bbv.Common.StateMachine.Internals.StateMachine`2.TransitionDeclined">
+            <summary>
+            Occurs when no transition could be executed.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.Internals.StateMachine`2.ExceptionThrown">
+            <summary>
+            Occurs when an exception was thrown inside the state machine.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.Internals.StateMachine`2.TransitionExceptionThrown">
+            <summary>
+            Occurs when an exception was thrown inside a transition of the state machine.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.Internals.StateMachine`2.TransitionBegin">
+            <summary>
+            Occurs when a transition begins.
+            </summary>
+        </member>
+        <member name="E:bbv.Common.StateMachine.Internals.StateMachine`2.TransitionCompleted">
+            <summary>
+            Occurs when a transition completed.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.StateMachine`2.Name">
+            <summary>
+            Gets the name of this instance.
+            </summary>
+            <value>The name of this instance.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.StateMachine`2.CurrentStateId">
+            <summary>
+            Gets the id of the current state.
+            </summary>
+            <value>The id of the current state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.StateMachine`2.CurrentState">
+            <summary>
+            Gets or sets the state of the current.
+            </summary>
+            <value>The state of the current.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.Transition`2">
+            <summary>
+            A transition of the state machine.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.Transition`2.log">
+            <summary>
+            The logger of this class.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.Transition`2.actions">
+            <summary>
+            The actions that are executed when this transition is fired.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.Transition`2.notifier">
+            <summary>
+            The notifier of the state machine.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.Transition`2.#ctor(bbv.Common.StateMachine.Internals.INotifier{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.Transition`2"/> class.
+            </summary>
+            <param name="notifier">The notifier of the state machine.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.Transition`2.Fire(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Fires the transition.
+            </summary>
+            <param name="context">The event context.</param>
+            <returns>The result of the transition.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.Transition`2.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.Transition`2.Fire(bbv.Common.StateMachine.Internals.IState{`0,`1},bbv.Common.StateMachine.Internals.IState{`0,`1},System.Object[],bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Recursively traverses the state hierarchy, exiting states along
+            the way, performing the action, and entering states to the target.
+            </summary>
+            <remarks>
+            There exist the following transition scenarios:
+            0. there is no target state (internal transition)
+               --> handled outside this method.
+            1. The source and target state are the same (self transition)
+               --> perform the transition directly:
+                   Exit source state, perform transition actions and enter target state
+            2. The target state is a direct or indirect sub-state of the source state
+               --> perform the transition actions, then traverse the hierarchy 
+                   from the source state down to the target state,
+                   entering each state along the way.
+                   No state is exited.
+            3. The source state is a sub-state of the target state
+               --> traverse the hierarchy from the source up to the target, 
+                   exiting each state along the way. 
+                   Then perform transition actions.
+                   Finally enter the target state.
+            4. The source and target state share the same super-state
+            5. All other scenarios:
+               a. The source and target states reside at the same level in the hierarchy 
+                  but do not share the same direct super-state
+               b. The source state is lower in the hierarchy than the target state
+               c. The target state is lower in the hierarchy than the source state
+            </remarks>
+            <param name="source">The source state.</param>
+            <param name="target">The target state.</param>
+            <param name="eventArguments">The event arguments.</param>
+            <param name="context">The event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.Transition`2.ShouldFire(System.Object[],bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Returns a value indicating whether the transition should fire (according to the <see cref="P:bbv.Common.StateMachine.Internals.Transition`2.Guard"/>).
+            </summary>
+            <param name="eventArguments">The event arguments.</param>
+            <param name="context">The event context.</param>
+            <returns>A value indicating whether to execute the transition.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.Transition`2.HandleException(System.Exception,bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Handles an exception thrown during performing the transition or guard evaluation.
+            </summary>
+            <param name="exception">The exception.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.Transition`2.PerformActions(System.Object[],bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Performs the actions of this transition.
+            </summary>
+            <param name="eventArguments">The event arguments.</param>
+            <param name="context">The event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.Transition`2.UnwindSubStates(bbv.Common.StateMachine.Internals.IState{`0,`1},bbv.Common.StateMachine.Internals.StateContext{`0,`1})">
+            <summary>
+            Exits all sub-states up the hierarchy up to the <paramref name="origin"/> state.
+            </summary>
+            <param name="origin">The origin.</param>
+            <param name="stateContext">The event context.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.Transition`2.Source">
+            <summary>
+            Gets or sets the source state of this transition.
+            </summary>
+            <value>The source state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.Transition`2.Target">
+            <summary>
+            Gets or sets the target state of this transition.
+            </summary>
+            <value>The target state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.Transition`2.Guard">
+            <summary>
+            Gets or sets the guard of this transition.
+            </summary>
+            <value>The guard.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.Transition`2.Actions">
+            <summary>
+            Gets the actions of this transaction.
+            </summary>
+            <value>The actions.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.Transition`2.InternalTransition">
+            <summary>
+            Gets a value indicating whether this is an internal transition.
+            </summary>
+            <value><c>true</c> if this is an internal transition; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.TransitionCompletedEventArgs`2">
+            <summary>
+            Provides information about a completed transition.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="T:bbv.Common.StateMachine.TransitionEventArgs`2">
+            <summary>
+            Event arguments providing a transition context.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.TransitionEventArgs`2.#ctor(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.TransitionEventArgs`2"/> class.
+            </summary>
+            <param name="context">The event context.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.TransitionEventArgs`2.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:bbv.Common.StateMachine.TransitionEventArgs`2.StateId">
+            <summary>
+            Gets the id of the source state of the transition.
+            </summary>
+            <value>The id of the source state of the transition.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.TransitionEventArgs`2.EventId">
+            <summary>
+            Gets the event id.
+            </summary>
+            <value>The event id.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.TransitionEventArgs`2.EventArguments">
+            <summary>
+            Gets the event arguments.
+            </summary>
+            <value>The event arguments.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.TransitionEventArgs`2.TransitionContext">
+            <summary>
+            Gets the event context.
+            </summary>
+            <value>The event context.</value>
+        </member>
+        <member name="F:bbv.Common.StateMachine.TransitionCompletedEventArgs`2.newStateId">
+            <summary>
+            The new state the state machine is in after the transition.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.TransitionCompletedEventArgs`2.#ctor(System.Nullable{`0},bbv.Common.StateMachine.Internals.TransitionContext{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.TransitionCompletedEventArgs`2"/> class.
+            </summary>
+            <param name="newStateId">The new state id.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.TransitionCompletedEventArgs`2.NewStateId">
+            <summary>
+            Gets the new state id the state machine is in after the transition.
+            </summary>
+            <value>The new state id the state machine is in after the transition.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.TransitionDictionary`2">
+            <summary>
+            Manages the transitions of a state.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.TransitionDictionary`2.transitions">
+            <summary>
+            The transitions.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.TransitionDictionary`2.state">
+            <summary>
+            The state this transition dictionary belongs to.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionDictionary`2.#ctor(bbv.Common.StateMachine.Internals.IState{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.TransitionDictionary`2"/> class.
+            </summary>
+            <param name="state">The state.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionDictionary`2.Add(`1,bbv.Common.StateMachine.Internals.ITransition{`0,`1})">
+            <summary>
+            Adds the specified event id.
+            </summary>
+            <param name="eventId">The event id.</param>
+            <param name="transition">The transition.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionDictionary`2.GetTransitions">
+            <summary>
+            Gets all transitions.
+            </summary>
+            <returns>All transitions.</returns>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionDictionary`2.CheckTransitionDoesNotYetExist(bbv.Common.StateMachine.Internals.ITransition{`0,`1})">
+            <summary>
+            Throws an exception if the specified transition is already defined on this state.
+            </summary>
+            <param name="transition">The transition.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionDictionary`2.MakeSureEventExistsInTransitionList(`1)">
+            <summary>
+            If there is no entry in the <see cref="F:bbv.Common.StateMachine.Internals.TransitionDictionary`2.transitions"/> dictionary then one is created.
+            </summary>
+            <param name="eventId">The event id.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionDictionary`2.GetTransitionsOfEvent(`1,System.Collections.Generic.List{bbv.Common.StateMachine.Internals.TransitionDictionary{`0,`1}.TransitionInfo})">
+            <summary>
+            Gets all the transitions associated to the specified event.
+            </summary>
+            <param name="eventId">The event id.</param>
+            <param name="list">The list to add the transition.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionDictionary`2.Item(`1)">
+            <summary>
+            Gets the transitions for the specified event id.
+            </summary>
+            <value>transitions for the event id.</value>
+            <param name="eventId">Id of the event.</param>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.TransitionDictionary`2.TransitionInfo">
+            <summary>
+            Describes a transition.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionDictionary`2.TransitionInfo.#ctor(`1,bbv.Common.StateMachine.Internals.IState{`0,`1},bbv.Common.StateMachine.Internals.IState{`0,`1},System.Boolean,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.TransitionDictionary`2.TransitionInfo"/> class.
+            </summary>
+            <param name="eventId">The event id.</param>
+            <param name="source">The source.</param>
+            <param name="target">The target.</param>
+            <param name="hasGuard">Whether the transition has a guard or not.</param>
+            <param name="actions">The number actions.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionDictionary`2.TransitionInfo.EventId">
+            <summary>
+            Gets the event id.
+            </summary>
+            <value>The event id.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionDictionary`2.TransitionInfo.Source">
+            <summary>
+            Gets the source.
+            </summary>
+            <value>The source.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionDictionary`2.TransitionInfo.Target">
+            <summary>
+            Gets the target.
+            </summary>
+            <value>The target.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionDictionary`2.TransitionInfo.HasGuard">
+            <summary>
+            Gets a value indicating whether this instance has a guard.
+            </summary>
+            <value><c>true</c> if this instance has a guard; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionDictionary`2.TransitionInfo.Actions">
+            <summary>
+            Gets the number of actions.
+            </summary>
+            <value>The actions.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.TransitionContext`2">
+            <summary>
+            Provides context information during a transition.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.TransitionContext`2.eventId">
+            <summary>
+            The event that causes the transition.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.TransitionContext`2.eventArguments">
+            <summary>
+            The event arguments.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionContext`2.#ctor(bbv.Common.StateMachine.Internals.IState{`0,`1},`1,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.TransitionContext`2"/> class.
+            </summary>
+            <param name="state">The source state.</param>
+            <param name="eventId">The event id.</param>
+            <param name="eventArguments">The event arguments.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionContext`2.EventId">
+            <summary>
+            Gets the event id.
+            </summary>
+            <value>The event id.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionContext`2.EventArguments">
+            <summary>
+            Gets the event arguments.
+            </summary>
+            <value>The event arguments.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.TransitionExceptionEventArgs`2">
+            <summary>
+            Event arguments providing transition exceptions.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.TransitionExceptionEventArgs`2.exception">
+            <summary>
+            The exception.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.TransitionExceptionEventArgs`2.#ctor(bbv.Common.StateMachine.Internals.TransitionContext{`0,`1},System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.TransitionExceptionEventArgs`2"/> class.
+            </summary>
+            <param name="context">The event context.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.TransitionExceptionEventArgs`2.Exception">
+            <summary>
+            Gets the exception.
+            </summary>
+            <value>The exception.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.Internals.TransitionResult`2">
+            <summary>
+            Represents the result of a transition.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="F:bbv.Common.StateMachine.Internals.TransitionResult`2.NotFired">
+            <summary>
+            This value represents that no transition was fired.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.Internals.TransitionResult`2.#ctor(System.Boolean,bbv.Common.StateMachine.Internals.IState{`0,`1},System.Collections.Generic.ICollection{System.Exception})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.Internals.TransitionResult`2"/> class.
+            </summary>
+            <param name="fired">if set to <c>true</c> [fired].</param>
+            <param name="newState">The new state.</param>
+            <param name="exceptions">The exceptions.</param>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionResult`2.Fired">
+            <summary>
+            Gets a value indicating whether this <see cref="T:bbv.Common.StateMachine.Internals.ITransitionResult`2"/> is fired.
+            </summary>
+            <value><c>true</c> if fired; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionResult`2.NewState">
+            <summary>
+            Gets the new state the state machine is in.
+            </summary>
+            <value>The new state.</value>
+        </member>
+        <member name="P:bbv.Common.StateMachine.Internals.TransitionResult`2.Exceptions">
+            <summary>
+            Gets all exceptions that occurred during executing the transition.
+            </summary>
+            <value>The exceptions.</value>
+        </member>
+        <member name="T:bbv.Common.StateMachine.UnitTestStateMachine`2">
+            <summary>
+            Special state machine that can be used in unit tests for easier exception testing.
+            This state machine does not only signal exception cases and declined transitions with events
+            but throws exceptions, too. This guarantees that these exception cases don't stay hidden in
+            unit tests.
+            </summary>
+            <typeparam name="TState">The type of the state.</typeparam>
+            <typeparam name="TEvent">The type of the event.</typeparam>
+        </member>
+        <member name="M:bbv.Common.StateMachine.UnitTestStateMachine`2.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.UnitTestStateMachine`2"/> class.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.StateMachine.UnitTestStateMachine`2.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.UnitTestStateMachine`2"/> class.
+            </summary>
+            <param name="name">The name of the state machine. Used in log messages.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.UnitTestStateMachine`2.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.StateMachine.UnitTestStateMachine`2"/> class.
+            </summary>
+            <param name="name">The name of the state machine. Used in log messages.</param>
+            <param name="logger">The logger used for log messages.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.UnitTestStateMachine`2.HandleTransitionDeclined(System.Object,bbv.Common.StateMachine.TransitionEventArgs{`0,`1})">
+            <summary>
+            Throws an exception when a transition declined event is received.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="e">The <see cref="T:bbv.Common.StateMachine.TransitionEventArgs`2"/> instance containing the event data.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.UnitTestStateMachine`2.HandleExceptionThrown(System.Object,bbv.Common.StateMachine.ExceptionEventArgs{`0,`1})">
+            <summary>
+            Throws the exception received in the event arguments. The stack trace of the original exception is restored.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="e">The <see cref="T:bbv.Common.StateMachine.ExceptionEventArgs`2"/> instance containing the event data.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.UnitTestStateMachine`2.HandleTranistionExceptionThrown(System.Object,bbv.Common.StateMachine.TransitionExceptionEventArgs{`0,`1})">
+            <summary>
+            Throws the exception received in the event arguments. The stack trace of the original exception is restored.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="e">The <see cref="T:bbv.Common.StateMachine.ExceptionEventArgs`2"/> instance containing the event data.</param>
+        </member>
+        <member name="M:bbv.Common.StateMachine.UnitTestStateMachine`2.RestoreOriginalStackTrace(System.Exception)">
+            <summary>
+            Restores the original stack trace of the specified exception.
+            </summary>
+            <param name="exception">The exception.</param>
+        </member>
+    </members>
+</doc>

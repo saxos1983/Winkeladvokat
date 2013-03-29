@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<project name="Winkeladvokat" default="build" basedir=".">
+	<property name="project.name" value="Winkeladvokat" />
+  <property name="solution.name" value="${project.name}.sln" />
+	<property name="project.dir" value="../source" />
+	<property name="results.dir" value="../results" />
+	<property name="configuration" value="Release" />
+	<property name="unit.test.exclusions" value="none" />
+	<property name="nunit.executable" value="../Tools/NUnit/nunit-console-x86.exe" />
+  <property name="nunit.project" value="Winkeladvokat.nunit" />
+  <property name="bin.dir" value="${results.dir}/${configuration}" dynamic="true" />
+  <property name="svn.exe" value="../Tools/SvnClient/svn.exe" />
+  <property name="nant.onfailure" value="revert-assemblyinfo" />
+  <property name="nant.onsuccess" value="revert-assemblyinfo" />
+  <property name="build.version" value="" />
+
+  <property name="global.versioninfo" value="GlobalVersionInfo.cs" />
+  <property name="version.info.file" value="version.ini" />
+   
+    
+    <target name="checkout-build" description="build a version for the developer">
+        <property name="configuration" value="Debug" />
+        <call target="internal-build" />
+    </target>
+
+    <target name="integration-build" description="build a version for the developer and run all unit tests for testing before check-in in subversion">
+        <property name="configuration" value="Release" />
+        <call target="internal-build" />
+    </target>
+
+    <target name="internal-build" description="build a version for the developer and run all unit testsfor testing before check-in in subversion" 
+            depends="create-version, generate-version-info, clean, clean-compile, rebuild-compile" />
+
+    <target name="clean" description="empty the result folder">
+        <mkdir dir="${results.dir}" />
+        <delete>
+            <fileset basedir="${results.dir}">
+                <include name="*.xml" />
+                <include name="*.html" />
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="clean-compile" description="call the clean goal of the MS solutions">
+        <echo message="Starting cleaning of solutions" />
+
+        <delete>
+            <fileset basedir="${bin.dir}">
+                <include name="**" />
+            </fileset>
+        </delete>
+        
+        <echo message="Completion cleaning of solutions" />
+    </target>
+
+    <target name="rebuild-compile" description="compile the project with Rebuild">
+        <property name="mode" value="Rebuild"/>
+        <call target="compile"/>
+    </target>
+
+    <target name="compile" description="compile the solution">
+        <echo message="Starting compilation of solutions" />
+        
+        <msbuild project = "${project.dir}/${solution.name}" target="${mode}">
+            <property name = "Configuration" value="${configuration}" />
+        </msbuild>
+    </target>
+
+   <target name="unit-tests" description="execute all units test for the solution" depends="create-nunit">
+        <mkdir dir="${results.dir}" />
+        <exec program="${nunit.executable}" workingdir="${results.dir}"
+			commandline="${nunit.project} /xml:${results.dir}/${project.name}.xml /exclude:${unit.test.exclusions}"/>
+        <nunit2report todir="${results.dir}" format="NoFrames" opendesc="true" >
+            <fileset>
+                <include name="${results.dir}/${project.name}.xml" />
+            </fileset>
+        </nunit2report>
+    </target>
+
+    <target name="create-nunit" description="generates the nunit file for the unit tests">
+        <bbv.nunitproject project="${results.dir}/${nunit.project}" appBase=".">
+            <fileset basedir="${results.dir}">
+                <include name="Release/**/*Test.dll" />
+            </fileset>
+        </bbv.nunitproject>
+    </target>
+
+    <target name="run-fxcop">
+ <!--       <setenv name="PATH" value="../tools/FxCop;%PATH%"/>
+        <namefilteredfileset basedir="${bin.dir}" id="fxcopassemblies">
+            <include name="**/Winkeladvokat*.dll" />
+            <include name="**/Winkeladvokat*.exe" />
+            <exclude name="**/*.Test.dll" />
+            <exclude name="**/*.AcceptanceTest.dll" />
+        </namefilteredfileset>
+        <fxcop projectFile="..\${project.name}.FxCop" analysisReportFilename="${results.dir}/${project.name}.FxCop.xml" includeSummaryReport="True" failOnAnalysisError="True" directOutputToConsole="True">
+            <targets refid="fxcopassemblies">
+            </targets>
+        </fxcop> -->
+    </target>
+
+    <target name="clean-results">
+        <delete>
+            <fileset basedir="${results.dir}">
+                <include name="**/**" />
+            </fileset>
+        </delete>
+    </target>
+
+   <target name="create-version">
+        <choose>
+            <when test="${build.version != ''}">
+                <!-- this is a TC driven build -->
+                <property name= "version" value="0.0.0.${build.version}"/>
+                <echo message="This is an TC generated build" />
+            </when>
+            <otherwise>
+                <!-- this is a developer driven build -->
+                <call target="set-version-from-svn" />
+                <echo message="This is an temporary developer build" />
+            </otherwise>
+        </choose>
+
+    </target>
+
+    <target name="set-version-from-svn">
+
+        <!-- Retrieve subversion revision number -->
+        <mkdir dir="${results.dir}" />
+        <echo message="Retrieving Subversion revision number"/>
+        <exec
+			program="${svn.exe}"
+			commandline='log "${project.dir}\.." --non-interactive --xml --limit 1'
+			output="${results.dir}\_revision.xml"
+			failonerror="false"/>
+        <xmlpeek
+			file="${results.dir}\_revision.xml"
+			xpath="/log/logentry/@revision"
+			property="revision"
+			failonerror="false"/>
+        <echo message="Using Subversion revision number: ${revision}"/>
+
+        <property name="version" value="0.0.0.${revision}" />
+
+    </target>
+
+    <target name="revert-assemblyinfo">
+        <exec
+			program="${svn.exe}"
+			commandline='revert "${project.dir}\${global.versioninfo}" --quiet'
+			failonerror="false"/>
+    </target>
+
+    <target name="generate-version-info">
+        <echo message="//------------------------------------------------------------------------------
+// &lt;auto-generated&gt;
+//     This code was generated by a tool.
+//     Runtime Version:2.0.50727.3053
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// &lt;/auto-generated&gt;
+//------------------------------------------------------------------------------
+using System;
+using System.Reflection;
+			
+[assembly: AssemblyVersion(&quot;${version}&quot;)]
+[assembly: AssemblyFileVersion(&quot;${version}&quot;)]" file="${project.dir}\${global.versioninfo}" />
+
+    </target>
+
+</project>

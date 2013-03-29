@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.Messaging</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.Messaging.AutoCreateMessageQueue">
+            <summary>
+            This class is responsible for dealing with microsoft message queues. It
+            takes a message queue name as a construction parameter. The class will
+            create the message queue when it doesn't exist while calling Initialize.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Messaging.AutoCreateMessageQueue.#ctor(System.String)">
+            <summary>
+            Creates an instance of <see cref="T:bbv.Common.Messaging.AutoCreateMessageQueue"/>.
+            </summary>
+            <param name="queueName">The name of the queue to create. The convention must follow these 
+            of <see cref="M:System.Messaging.MessageQueue.Create(System.String)"/>.</param>
+        </member>
+        <member name="M:bbv.Common.Messaging.AutoCreateMessageQueue.Initialize">
+            <summary>
+            Initializes the class and creates or gets the message queue with the defined queue name.
+            The formatter of the message queue will be set to a <see cref="T:System.Messaging.BinaryMessageFormatter"/>.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Messaging.AutoCreateMessageQueue.Purge">
+            <summary>
+            Deletes all the messages contained in the queue.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Messaging.AutoCreateMessageQueue.Add(System.Object,System.String)">
+            <summary>
+            Adds an object to the nontransactional queue and specifies a label for the message.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.Messaging.AutoCreateMessageQueue.GetBlocking">
+            <summary>
+            Receives the first message available in the queue. This call is synchronous, and 
+            blocks the current thread of execution until a message is available.
+            </summary>
+            <returns>Returns the content of the message. The caller is responsible to interpret the contents.</returns>
+        </member>
+        <member name="M:bbv.Common.Messaging.AutoCreateMessageQueue.Finalize">
+            <summary>
+            Destructor of AutoCreateMessageQueue
+            </summary>
+            <remarks>
+            Calls <see cref="M:bbv.Common.Messaging.AutoCreateMessageQueue.Dispose(System.Boolean)"/> with disposing = false.
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Messaging.AutoCreateMessageQueue.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <remarks>
+            Calls <see cref="M:bbv.Common.Messaging.AutoCreateMessageQueue.Dispose(System.Boolean)"/> with disposing = true.
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.Messaging.AutoCreateMessageQueue.Dispose(System.Boolean)">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <param name="disposing">True if called by <see cref="M:bbv.Common.Messaging.AutoCreateMessageQueue.Dispose"/>.</param>
+        </member>
+        <member name="P:bbv.Common.Messaging.AutoCreateMessageQueue.Queue">
+            <summary>
+            Advanced access.
+            </summary>
+        </member>
+        <member name="P:bbv.Common.Messaging.AutoCreateMessageQueue.QueueName">
+            <summary>
+            Gets the name of the queue.
+            </summary>
+            <value>The name of the queue.</value>
+        </member>
+    </members>
+</doc>

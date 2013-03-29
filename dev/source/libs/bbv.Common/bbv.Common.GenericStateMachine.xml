@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>bbv.Common.GenericStateMachine</name>
+    </assembly>
+    <members>
+        <member name="T:bbv.Common.GenericStateMachine.GenericStateMachine`2">
+            <summary>
+            Generic state machine class, supports state changes with transaction delegates.
+            This class is not thread safe.
+            </summary>
+            <typeparam name="TStates">The type of the states.</typeparam>
+            <typeparam name="TEvents">The type of the events.</typeparam>
+        </member>
+        <member name="F:bbv.Common.GenericStateMachine.GenericStateMachine`2.invalidEventAction">
+            <summary>
+            This delegate is invoked when reacting on an event that is valid for the current state. Can be null.
+            </summary>
+        </member>
+        <member name="F:bbv.Common.GenericStateMachine.GenericStateMachine`2.unhandledExceptionInAction">
+            <summary>
+            This delegate is invoked when reacting on an event that is valid for the current state. Can be null.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.#ctor(System.String,bbv.Common.GenericStateMachine.GenericStateMachine{`0,`1}.InvalidEventAction,bbv.Common.GenericStateMachine.GenericStateMachine{`0,`1}.UnhandledExceptionInAction)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.GenericStateMachine.GenericStateMachine`2"/> class.
+            </summary>
+            <param name="name">Name of the state machine. This name is used in log messages to identify the state machine.</param>
+            <param name="invalidEventAction">The delegate that is executed when an invalid event for the
+            current state is fired to the state machine. Null if no action should be performed. State machine will stay in current state.</param>
+            <param name="unhandledExceptionInAction">The delegate that is executed when an action</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddStateEntryAction(`0,bbv.Common.GenericStateMachine.GenericStateMachine{`0,`1}.ActionDelegate)">
+            <summary>
+            Adds a state entry action.
+            This action is performed when the specified state is entered.
+            
+            If there exists an entry action for the specified state already then it will be replaced.
+            </summary>
+            <param name="state">The state.</param>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddStateEntryAction(`0,bbv.Common.GenericStateMachine.IAction{`0,`1})">
+            <summary>
+            Adds a state entry action.
+            This action is performed when the specified state is entered.
+            </summary>
+            <param name="state">The state.</param>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddStateExitAction(`0,bbv.Common.GenericStateMachine.GenericStateMachine{`0,`1}.ActionDelegate)">
+            <summary>
+            Adds the state exit action.
+            This exit is performed when the specified state is left.
+            </summary>
+            <param name="state">The state.</param>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddStateExitAction(`0,bbv.Common.GenericStateMachine.IAction{`0,`1})">
+            <summary>
+            Adds the state exit action.
+            This exit is performed when the specified state is left.
+            </summary>
+            <param name="state">The state.</param>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddTransition(`0,`1,`0)">
+            <summary>
+            Adds a transition.
+            </summary>
+            <param name="state">The current state.</param>
+            <param name="input">The event.</param>
+            <param name="newState">The new state.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddTransition(`0,`1,`0,bbv.Common.GenericStateMachine.GenericStateMachine{`0,`1}.ActionDelegate)">
+            <summary>
+            Adds a transition.
+            </summary>
+            <param name="state">The current state.</param>
+            <param name="input">The event.</param>
+            <param name="newState">The new state.</param>
+            <param name="action">The action to take when the specified event occurs on the specified current state.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddTransition(`0,`1,`0,bbv.Common.GenericStateMachine.IAction{`0,`1})">
+            <summary>
+            Adds a transition.
+            </summary>
+            <param name="state">The current state.</param>
+            <param name="input">The event.</param>
+            <param name="newState">The new state.</param>
+            <param name="action">The action to take when the specified event occurs on the specified current state.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddTransition(`0[],`1,`0)">
+            <summary>
+            Adds transition for several states at once.
+            </summary>
+            <param name="states">The curr states.</param>
+            <param name="input">The event.</param>
+            <param name="newState">The new state.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.AddTransition(`0[],`1,`0,bbv.Common.GenericStateMachine.GenericStateMachine{`0,`1}.ActionDelegate)">
+            <summary>
+            Adds transition for several states at once.
+            </summary>
+            <param name="states">The curr states.</param>
+            <param name="input">The event.</param>
+            <param name="newState">The new state.</param>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.RemoveTransition(`0,`1)">
+            <summary>
+            Removes a transition for an event from a state.
+            Throws an exception if the specified state does not have a transition for the specified event.
+            </summary>
+            <param name="state">The state.</param>
+            <param name="input">The event for which the transition is removed..</param>
+            <exception cref="T:System.Exception">Thrown if the specified state does not have a transition for the specified event.</exception>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.RemoveTransition(`0,`1,System.Boolean)">
+            <summary>
+            Removes a transition for an event from a state.
+            </summary>
+            <param name="state">The state.</param>
+            <param name="input">The event for which the transition is removed..</param>
+            <param name="throwException">Whether an exception is thrown if the specified state does not have a transition for the specified event.</param>
+            <exception cref="T:System.Exception">Thrown if the specified state does not have a transition for the specified event and <paramref name="throwException"/> is true.</exception>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.Reset(`0)">
+            <summary>
+            Sets the state machine to the specified state without executing any actions.
+            </summary>
+            <param name="startState">The start state.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.ReactOn(`1)">
+            <summary>
+            Reacts on Event.
+            </summary>
+            <param name="input">The input.</param>
+            <returns></returns>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.ReactOn(`1,System.Object)">
+            <summary>
+            Reacts on Event.
+            </summary>
+            <param name="input">The input.</param>
+            <param name="eventValue">The value. Can be null (which is actually the sam eas calling <see cref="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.ReactOn(`1)"/>)</param>
+            <returns></returns>
+            <exception cref="T:bbv.Common.GenericStateMachine.GenericStateMachineException">Thrwon when this method is called within the processing of an action.</exception>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.Report">
+            <summary>
+            Reports this instance. Generates a dot file (see www.graphviz.org).
+            
+            Not thread safe.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.OnInvalidEvent(`0,`1,System.Object)">
+            <summary>
+            Called when an invalid event is fired to the state machine.
+            Calls the on construction registered action handler.
+            </summary>
+            <param name="currentState">State of the current.</param>
+            <param name="invalidEvent">The invalid event.</param>
+            <param name="invalidEventValue">The invalid event value.</param>
+        </member>
+        <member name="P:bbv.Common.GenericStateMachine.GenericStateMachine`2.CurrentState">
+            <summary>
+            Gets the current state.
+            </summary>
+            <value>The state of the current.</value>
+        </member>
+        <member name="T:bbv.Common.GenericStateMachine.GenericStateMachine`2.ActionDelegate">
+            <summary>
+            This delegate is used to define transition actions.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.GenericStateMachine.GenericStateMachine`2.InvalidEventAction">
+            <summary>
+            This delegate is used to register a method that handles the situation when an invalid event for the current
+            state is fired to the state machine.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.GenericStateMachine.GenericStateMachine`2.UnhandledExceptionInAction">
+            <summary>
+            This delegate is used to register a method that handles the situation when an action throws an exception that it
+            does not handle itself. The state machine will continue to run.
+            </summary>
+        </member>
+        <member name="T:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition">
+            <summary>
+            Represents a transition out of a state in reaction to an event.
+            </summary>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition.#ctor(`0,`1,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition"/> class.
+            </summary>
+            <param name="currentState">The current State.</param>
+            <param name="evt">The event.</param>
+            <param name="newState">The new state.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition.#ctor(`0,`1,`0,bbv.Common.GenericStateMachine.GenericStateMachine{`0,`1}.ActionDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition"/> class.
+            </summary>
+            <param name="currentState">The current State.</param>
+            <param name="evt">The event.</param>
+            <param name="newState">The new state.</param>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition.#ctor(`0,`1,`0,bbv.Common.GenericStateMachine.IAction{`0,`1})">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition"/> class.
+            </summary>
+            <param name="currentState">The current State.</param>
+            <param name="evt">The event.</param>
+            <param name="newState">The new state.</param>
+            <param name="action">The action.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition.Execute(System.Object)">
+            <summary>
+            Executes the action if defined.
+            </summary>
+            <param name="eventValue">The value.</param>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+            </returns>
+        </member>
+        <member name="P:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition.CurrentState">
+            <summary>
+            Gets the the current state .
+            </summary>
+            <value>The state of the current.</value>
+        </member>
+        <member name="P:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition.Event">
+            <summary>
+            Gets the event.
+            </summary>
+            <value>The event.</value>
+        </member>
+        <member name="P:bbv.Common.GenericStateMachine.GenericStateMachine`2.StateTransition.NewState">
+            <summary>
+            Gets the new state.
+            </summary>
+            <value>The new state.</value>
+        </member>
+        <member name="T:bbv.Common.GenericStateMachine.GenericStateMachineException">
+            <summary>
+            Exception thrown by the <see cref="N:bbv.Common.GenericStateMachine"/>
+            </summary>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.GenericStateMachineException.#ctor(System.String,System.String,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:bbv.Common.GenericStateMachine.GenericStateMachineException"/> class.
+            </summary>
+            <param name="stateMachine">The name of the state machine.</param>
+            <param name="message">The message.</param>
+            <param name="args">The message arguments.</param>
+        </member>
+        <member name="T:bbv.Common.GenericStateMachine.IAction`2">
+            <summary>
+            An action can be executed on a transition in the <see cref="N:bbv.Common.GenericStateMachine"/>.
+            </summary>
+            <remarks>
+            You can use actions in case that the delegate approach for actions on transactions is not
+            flexible enough.
+            </remarks>
+        </member>
+        <member name="M:bbv.Common.GenericStateMachine.IAction`2.Execute(bbv.Common.GenericStateMachine.GenericStateMachine{`0,`1}.StateTransition,System.Object)">
+            <summary>
+            Executes the specified action.
+            </summary>
+            <param name="transition">The transition this action is executed on.</param>
+            <param name="eventValue">The value passed along with the event.</param>
+        </member>
+    </members>
+</doc>

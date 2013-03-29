@@ -1,0 +1,9 @@
+<TemplatesExport family="Live Templates">
+  <Template uid="3a4f9163-2a17-42c6-bc00-7e9b4e23388d" shortcut="bbvfileheader" description="file header" text="//-------------------------------------------------------------------------------&#xD;&#xA;// &lt;copyright file=&quot;$file$&quot; company=&quot;bbv Software Services AG&quot;&gt;&#xD;&#xA;//   Copyright (c) 2010 bbv Software Services AG&#xD;&#xA;// &lt;/copyright&gt;&#xD;&#xA;//-------------------------------------------------------------------------------" reformat="True" shortenQualifiedReferences="True">
+    <Categories />
+    <Variables>
+      <Variable name="file" expression="getFileName()" initialRange="-1" />
+    </Variables>
+    <CustomProperties />
+  </Template>
+</TemplatesExport>
