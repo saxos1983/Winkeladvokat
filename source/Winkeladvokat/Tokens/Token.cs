@@ -1,7 +1,7 @@
-﻿namespace Winkeladvokat
-{
-    using System.Windows.Media;
+using System.Windows.Media;
 
+namespace Winkeladvokat.Tokens
+{
     public abstract class Token
     {
         public Color Color { get; set; }

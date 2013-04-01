@@ -1,4 +1,6 @@
-﻿namespace Winkeladvokat
+﻿using Winkeladvokat.Tokens;
+
+namespace Winkeladvokat
 {
     using System;
     using System.Linq;
@@ -28,7 +30,7 @@
             this.performMove.MakeWinkelzug(StartField, CornerField, EndField);
 
             // ASSERT
-            this.gameBoardViewModel.FieldViewModels.Single(StartField).Field.Token.Should().BeNull();
+            this.gameBoardViewModel.FieldViewModels.Single(StartField).Field.HasToken.Should().BeFalse();
         }
 
         [Test]

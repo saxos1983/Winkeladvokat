@@ -1,4 +1,7 @@
-﻿namespace Winkeladvokat
+﻿using System.Diagnostics;
+using Winkeladvokat.Tokens;
+
+namespace Winkeladvokat
 {
     using System;
     using System.Collections.Generic;
@@ -59,7 +62,7 @@
         {
             if (this.currentMove == null)
             {
-                if (field.Token == null)
+                if (field.Token is NoToken)
                 {
                     return MoveResult.CreateInvalidResult("Der erste Zug muss von einem Feld mit einem Spielstein stattfinden.");
                 }
@@ -89,6 +92,7 @@
                 this.currentMove = null;
             }
 
+            Debug.WriteLine(this.ToString());
             return moveResult;
         }
 
@@ -102,7 +106,7 @@
 
         private static bool FieldExistsAndIsFree(Field f)
         {
-            return f != null && f.Token == null;
+            return f != null && f.Token is NoToken;
         }
 
         private bool CheckVertical(Field currentAdvokatTokenPosition, int numberofColumnsToMoveDown)
@@ -181,6 +185,53 @@
             }
 
             return null;
+        }
+
+        public override string ToString()
+        {
+            string result = "";
+            var fieldsWithToken = this.Fields.Where(f => f.HasToken);
+            foreach (var actualField in fieldsWithToken)
+            {
+                var tokenType = "";
+                if (actualField.Token is AdvocatToken)
+                {
+                    tokenType += "AT";
+                }
+                if (actualField.Token is ParagraphToken)
+                {
+                    tokenType += "PT";
+                }
+
+                if (actualField.Token.Color == Colors.Red)
+                {
+                    tokenType += "R";
+                } 
+                else if (actualField.Token.Color == Colors.Green)
+                {
+                    tokenType += "G";
+                }
+                else if (actualField.Token.Color == Colors.Blue)
+                {
+                    tokenType += "B";
+                }
+                else if (actualField.Token.Color == Colors.Yellow)
+                {
+                    tokenType += "Y";
+                }
+                else
+                {
+                    tokenType += "?";
+                }
+                result += string.Format("{0}[{1},{2}];", tokenType, actualField.Row, actualField.Column);
+            }
+
+            if (result.EndsWith(";"))
+            {
+                result = result.Substring(0, result.Length - 1);
+            }
+
+            return result;
         }
     }
 }

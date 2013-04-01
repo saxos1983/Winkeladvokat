@@ -1,4 +1,6 @@
-﻿namespace Winkeladvokat
+﻿using Winkeladvokat.Tokens;
+
+namespace Winkeladvokat
 {
     using System;
     using System.Linq;
@@ -29,7 +31,7 @@
             this.MakeSimpleParagraphenzug(StartField, EndField);
 
             // ASSERT
-            this.gameBoardViewModel.FieldViewModels.Single(StartField).Field.Token.Should().BeNull();
+            this.gameBoardViewModel.FieldViewModels.Single(StartField).Field.Token.Should().BeOfType<NoToken>();
         }
 
         [Test]
@@ -49,7 +51,7 @@
             this.MakeSimpleParagraphenzug(StartField, EndField);
 
             // Assert
-            this.gameBoardViewModel.FieldViewModels.Single(GreenTokenCornerField).Field.Token.Should().BeNull();
+            this.gameBoardViewModel.FieldViewModels.Single(GreenTokenCornerField).Field.Token.Should().BeOfType<NoToken>();
         }
 
         private static bool EndField(FieldViewModel f)

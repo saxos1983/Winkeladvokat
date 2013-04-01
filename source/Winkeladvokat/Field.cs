@@ -1,10 +1,17 @@
+using Winkeladvokat.Tokens;
+
 namespace Winkeladvokat
 {
     using System.Globalization;
 
     public class Field
     {
-        public Field(int row, int column)
+        private Field()
+        {
+            this.Token = new NoToken();
+        }
+
+        public Field(int row, int column) : this()
         {
             this.Row = row;
             this.Column = column;
@@ -17,6 +24,15 @@ namespace Winkeladvokat
         public int Row { get; private set; }
 
         public int Column { get; private set; }
+
+        public bool HasToken
+        {
+            get
+            {
+                var token = this.Token;
+                return token != null && token.GetType() != typeof(NoToken);
+            }
+        }
 
         public override string ToString()
         {

@@ -1,4 +1,6 @@
-﻿namespace Winkeladvokat
+﻿using Winkeladvokat.Tokens;
+
+namespace Winkeladvokat
 {
     using FakeItEasy;
 

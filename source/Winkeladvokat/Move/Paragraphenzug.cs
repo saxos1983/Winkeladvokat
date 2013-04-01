@@ -1,4 +1,6 @@
-﻿namespace Winkeladvokat.Move
+﻿using Winkeladvokat.Tokens;
+
+namespace Winkeladvokat.Move
 {
     using System;
     using System.Collections.Generic;
@@ -18,6 +20,13 @@
 
         public override bool IsFinished { get; protected set; }
 
+        public override bool IsValid
+        {
+            get { return this.CheckIsValid(this.moves.ElementAt(0), this.moves.ElementAt(1)); }
+
+            protected set { throw new NotImplementedException(); }
+        }
+
         public override MoveResult PerformMove(Field field)
         {
             MoveResult result = MoveResult.CreateValidResult();
@@ -27,7 +36,7 @@
 
             if (this.MovesFromStartPosition())
             {
-                if (field.Token != null)
+                if (field.HasToken)
                 {
                     this.playingParagraphToken = field.Token;
                     this.RemoveTokenFrom(startPosition);
@@ -53,7 +62,7 @@
                 }
 
                 this.IsFinished = true;
-                this.playingParagraphToken = null;
+                this.playingParagraphToken = new NoToken();
                 this.ClearMoves();
             }
 
@@ -68,14 +77,6 @@
         private void SetPlayingParagraphTokenAt(Field destination)
         {
             destination.Token = new ParagraphToken { Color = this.playingParagraphToken.Color };
-        }
-
-        private void RemoveTokenFrom(Field fieldToRemoveToken)
-        {
-            if (fieldToRemoveToken != null)
-            {
-                fieldToRemoveToken.Token = null;
-            }
         }
 
         private bool CheckIsValid(Field startPosition, Field endPosition)
@@ -103,7 +104,7 @@
 
         private bool IsEndPositionValid(Field endPosition)
         {
-            return endPosition.Token == null;
+            return endPosition.Token is NoToken;
         }
 
         private bool IsParagraphTokenHorizontallyOrVerticallyJumpingOverOneField(

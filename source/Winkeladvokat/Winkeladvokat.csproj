@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -58,7 +58,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AdvocatToken.cs" />
     <Compile Include="BoolToVisibilityConverter.cs" />
     <Compile Include="FieldListFactory.cs" />
     <Compile Include="FieldViewModel.cs" />
@@ -77,13 +76,11 @@
     <Compile Include="Move\MoveBase.cs" />
     <Compile Include="Move\Paragraphenzug.cs" />
     <Compile Include="Move\Winkelzug.cs" />
-    <Compile Include="ParagraphToken.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ScoreResult.cs" />
     <Compile Include="StartWindow.xaml.cs">
       <DependentUpon>StartWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Token.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -91,6 +88,10 @@
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="GameBoardViewModel.cs" />
+    <Compile Include="Tokens\AdvocatToken.cs" />
+    <Compile Include="Tokens\NoToken.cs" />
+    <Compile Include="Tokens\ParagraphToken.cs" />
+    <Compile Include="Tokens\Token.cs" />
     <Page Include="GameBoardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

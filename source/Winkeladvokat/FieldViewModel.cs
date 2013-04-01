@@ -1,3 +1,5 @@
+using Winkeladvokat.Tokens;
+
 namespace Winkeladvokat
 {
     using System.Windows.Media;
@@ -21,10 +23,7 @@ namespace Winkeladvokat
 
         public bool HasToken
         {
-            get
-            {
-                return this.field.Token != null;
-            }
+            get { return this.field.HasToken; }
         }
 
         public int Value
