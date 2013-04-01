@@ -1,9 +1,11 @@
+using System;
 using Winkeladvokat.Tokens;
 
 namespace Winkeladvokat
 {
     using System.Globalization;
 
+    [Serializable]
     public class Field
     {
         private Field()

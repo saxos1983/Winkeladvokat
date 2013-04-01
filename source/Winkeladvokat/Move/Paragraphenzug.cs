@@ -1,4 +1,5 @@
-﻿using Winkeladvokat.Tokens;
+﻿using System.Collections;
+using Winkeladvokat.Tokens;
 
 namespace Winkeladvokat.Move
 {
@@ -29,9 +30,16 @@ namespace Winkeladvokat.Move
 
         public override MoveResult PerformMove(Field field)
         {
+
             MoveResult result = MoveResult.CreateValidResult();
+            if (this.MovedToPossibleEndPosition() && this.MoveCanBeContinued() && FinishMoveRequested(field))
+            {
+                this.IsFinished = true;
+                this.ClearMoves();
+                return result;
+            }
+
             this.moves.Add(field);
-            var startPosition = this.moves.ElementAt(0);
             this.IsFinished = false;
 
             if (this.MovesFromStartPosition())
@@ -39,34 +47,44 @@ namespace Winkeladvokat.Move
                 if (field.HasToken)
                 {
                     this.playingParagraphToken = field.Token;
-                    this.RemoveTokenFrom(startPosition);
+                    this.RemoveTokenFrom(this.moves.ElementAt(0));
                 }
                 else
                 {
                     this.ClearMoves();
                 }
             }
-            else if (this.MovedToEndPosition())
+            else if (this.MovedToPossibleEndPosition())
             {
-                var endPosition = this.moves.ElementAt(1);
+                var actualPosition = this.moves.Last();
+                var previousPosition = this.moves.ElementAt(this.moves.Count - 2);
 
-                if (this.CheckIsValid(startPosition, endPosition))
+                if (this.CheckIsValid(previousPosition, actualPosition))
                 {
-                    this.SetPlayingParagraphTokenAt(endPosition);
-                    this.RemoveTokenFrom(this.GetJumpedOverField(startPosition, endPosition));
+                    this.SetPlayingParagraphTokenAt(actualPosition);
+                    this.RemoveTokenFrom(previousPosition);
+                    this.RemoveTokenFrom(this.GetJumpedOverField(previousPosition, actualPosition));
                 }
                 else
                 {
-                    this.SetPlayingParagraphTokenAt(startPosition);
+                    this.SetPlayingParagraphTokenAt(previousPosition);
                     result = MoveResult.CreateInvalidResult("Paragraphenzug ist nicht gültig!");
                 }
 
-                this.IsFinished = true;
-                this.playingParagraphToken = new NoToken();
-                this.ClearMoves();
+                if (!this.MoveCanBeContinued())
+                {
+                    this.IsFinished = true;
+                    this.playingParagraphToken = new NoToken();
+                    this.ClearMoves();
+                }
             }
 
             return result;
+        }
+
+        private bool FinishMoveRequested(Field field)
+        {
+            return this.moves.Last().Equals(field);
         }
 
         public void ClearMoves()
@@ -88,13 +106,26 @@ namespace Winkeladvokat.Move
                 var jumpedOverField = this.GetJumpedOverField(startPosition, endPosition);
                 if (jumpedOverField != null 
                     && this.IsOnJumpedOverFieldAnOpponentsParagraphToken(jumpedOverField) 
-                    && this.IsEndPositionValid(endPosition))
+                    && this.IsEndPositionValid(endPosition)
+                    && this.IsAnyMovePositionDifferent())
                 {
                     isValid = true;
                 }
             }
 
             return isValid;
+        }
+
+        private bool IsAnyMovePositionDifferent()
+        {
+            foreach (var move in this.moves)
+            {
+                if (this.moves.Count(f => f.Equals(move)) != 1)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private bool IsOnJumpedOverFieldAnOpponentsParagraphToken(Field jumpedOverField)
@@ -143,9 +174,61 @@ namespace Winkeladvokat.Move
             return this.moves.Count == 1;
         }
 
-        private bool MovedToEndPosition()
+        private bool MovedToPossibleEndPosition()
         {
-            return this.moves.Count == 2;
+            return this.moves.Count >= 2;
+        }
+
+        private bool MoveCanBeContinued()
+        {
+            if (this.MovesFromStartPosition())
+            {
+                return true;
+            }
+
+            var lastMove = this.moves.Last();
+
+            var nextToLastMove = this.moves.ElementAt(this.moves.Count - 2);
+
+            // Go up, down, left and right (except the position you came from).
+            var fieldUpwards = new Tuple<int, int>(lastMove.Row - 2, lastMove.Column);
+            var fieldDownwards = new Tuple<int, int>(lastMove.Row + 2, lastMove.Column);
+            var fieldToTheLeft = new Tuple<int, int>(lastMove.Row, lastMove.Column - 2);
+            var fieldToTheRight = new Tuple<int, int>(lastMove.Row, lastMove.Column + 2);
+            var positionsOfPossibleFieldsToJumpOn = new List<Tuple<int, int>> { fieldUpwards, fieldDownwards, fieldToTheLeft, fieldToTheRight };
+
+            var candidatesToJumpOn = new List<Field>();
+
+            foreach (var positionOfCandidate in positionsOfPossibleFieldsToJumpOn)
+            {
+                if (
+                    this.GameBoardFields.Any(
+                        f => f.Row == positionOfCandidate.Item1 && f.Column == positionOfCandidate.Item2) &&
+                    (nextToLastMove.Row != positionOfCandidate.Item1 && nextToLastMove.Column != positionOfCandidate.Item2))
+                {
+                    candidatesToJumpOn.Add(this.GameBoardFields.SelectByPosition(positionOfCandidate.Item1, positionOfCandidate.Item2));
+                }
+            }
+
+            if (!candidatesToJumpOn.Any())
+            {
+                return false;   // This shouldn't be possible. There will always be at least one candidate.
+            }
+
+            foreach (var fieldToJumpOn in candidatesToJumpOn)
+            {
+                var jumpedOverField = this.GetJumpedOverField(lastMove, fieldToJumpOn);
+                if (!this.IsOnJumpedOverFieldAnOpponentsParagraphToken(jumpedOverField))
+                {
+                    return false;
+                }
+                if (!this.IsEndPositionValid(fieldToJumpOn))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

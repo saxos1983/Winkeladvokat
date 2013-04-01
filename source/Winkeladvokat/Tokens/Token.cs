@@ -1,7 +1,9 @@
+using System;
 using System.Windows.Media;
 
 namespace Winkeladvokat.Tokens
 {
+    [Serializable]
     public abstract class Token
     {
         public Color Color { get; set; }
